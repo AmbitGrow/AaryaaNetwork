@@ -1043,3 +1043,9 @@
     font-size: 7px;
   }
 } */
+
+.option-row-group-3 .option-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  background-color: rgba(101, 30, 30, 0.05);
+}
