@@ -1,0 +1,329 @@
+.cp-first-section,.cp-second-section,.cp-third-section {
+  padding: 0rem 7rem;
+}
+.cp-last-section
+{
+   margin-top: 150px;
+}
+
+.let-talk-section {
+  width: 100%;
+  border-radius: 40px;
+  padding: 60px 50px;
+  padding-bottom: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap:25px;
+  min-height: 300px;
+  border-radius: 30px;
+  background: linear-gradient(
+    0deg,
+    rgba(51, 8, 9, 0.98),
+    rgba(101, 30, 30, 0.98)
+  );
+  position: relative;
+}
+.let-talk-section .c-style-img .c-style-left-img
+{
+   position: absolute;
+   left: 0;
+   top: 20px;
+   width: 290px;
+   opacity: 0.15;
+   z-index: 10;
+}
+.let-talk-section .c-style-img .c-style-right-img
+{
+   position: absolute;
+   width: 290px;
+   right: 0;
+   opacity: 0.15;
+   top: 20px;
+   z-index: 10;
+   transform: scaleX(-1);
+
+}
+.let-talk-section h2 {
+  font-size: 34px;
+  letter-spacing: .5px;
+  color: white;
+  font-weight:600;
+}
+.let-talk-section .sub-c-title {
+  font-size: 20px;
+  width: 80%;
+  letter-spacing: .1px;
+  line-height: 35px;
+  text-align: center;
+  color: #bebebe;
+}
+.contact-grid
+{
+     margin-top: 100px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); */
+     grid-template-rows: auto; 
+     row-gap: 60px;
+     column-gap: 80px;
+}
+.contact-grid .contact-box
+{
+    width:100%;
+    height: 180px;
+    min-height: 180px;
+    border-radius: 20px;
+    background-color: white;
+    border: 1px solid rgba(193, 193, 193, 0.5);
+    padding: 8px;
+     position: relative;
+     cursor: pointer;
+     transition: all 0.2s ease;
+}
+.contact-grid .contact-box:hover
+{
+    transform: scale(1.02);
+}
+.contact-box .contact-box-in
+{
+     /* background-color: rgb(255, 255, 255); */
+     width: 100%;
+     height: 100%;
+     border-radius: 15px;
+}
+.contact-box .contact-box1-in
+{
+    background-image: url('../../assets/Contact/Insta.gif');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0px;
+}
+.contact-box .contact-box3-in
+{
+    background-image: url('../../assets/Contact/location.gif');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0px;
+}
+.contact-box .contact-box5-in
+{
+   background-image: url('../../assets/Contact/youtube.gif');
+    background-repeat: no-repeat;
+     background-size: contain;
+       background-position:center;
+
+}
+.contact-box .contact-box6-in
+{
+   background-image: url('../../assets/Contact/facebook.gif');
+    background-repeat: no-repeat;
+    background-size: contain;
+       background-position:center;
+
+}
+.contact-box .contact-bottom
+{
+    background-color: white;
+    border: 1px solid #E4E4E4;
+    border-radius: 15px;
+    display: flex;
+    padding: 10px 20px;
+    height: 40px;
+    align-items: center;
+    width:fit-content;
+    gap: 10px;
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+    font-size: 15px;
+    letter-spacing: .5px;
+}
+/* .contact-box .contact-bottom-img
+{
+    width: 150px;
+    background-image: url('../../assets/Contact/Snkl.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0px;
+} */
+.contact-bottom .contact-bottom-circle
+{
+    background-color: white;
+    border: 1px solid #E4E4E4;
+    border-radius:50%;
+    width: 30px;
+    height: 30px;
+}
+.contact-box .contact-top
+{
+    background-color: #6a1b1b;;
+    border-radius:50%;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+}
+.contact-top .arrow-icon {
+  font-size: 18px;
+  transform: rotate(-40deg);
+}
+
+.cp-third-section .query
+{
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 80px;
+      margin-top: 150px;
+      width: 100%;
+}
+.left-query {
+  position: relative;
+  width: 45%;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.left-query-img {
+  width: 100%;
+  height: 750px;
+  object-fit: cover;
+  border-radius: 40px;
+}
+
+.query .right-query
+{
+   width: 55%;
+   margin-top: -25px;
+}
+.query .query-header h1
+{
+  font-size: 35px;
+  color: #191919;
+  font-weight: 400;
+
+}
+.query .query-header p
+{
+  width: 90%;
+  font-size: 16px;
+  line-height: 25px;
+  color: #606060;
+  font-weight: 300;
+}
+.query-box
+{
+   display: flex;
+   align-items: center;
+   gap: 50px;
+   width: 100%;
+   margin-top: 9px;
+}
+.input-flex-box 
+{
+  width: 100%;
+  margin-top: 30px;
+}
+.input-flex-box .input-div
+{
+  width: 100%;  
+  background-color: #F5F5F5; 
+  padding: 15px 20px;
+  border-radius: 10px;
+  border: 1px solid #CDCDCD;
+}
+ .query h3{
+  font-size: 17px;
+  letter-spacing: .5px;
+  font-weight: 400;
+  margin-bottom: 15px;
+}
+.input-flex-box .input-div input , .input-flex-box .input-div textarea
+{
+   border: none;
+   outline: none;
+   color: #727171;
+   font-size: 14px;
+   letter-spacing: .5px;
+   font-weight:light;
+   background: transparent;
+   width: 100%;
+}
+.send-message{
+    width: 100%;
+    border-radius: 25px;
+    color: white;
+    background-color: #651E1E;
+    font-size: 18px;
+    padding: 15px 20px;
+    letter-spacing: .5px;
+    border: none;
+    font-weight: lighter;
+    margin-top: 30px;
+} 
+
+
+@media (max-width:798px)
+{
+  .cp-first-section,.cp-second-section,.cp-third-section {
+  padding: 0rem 3rem;
+}
+.cp-last-section
+{
+   margin-top: 100px;
+}
+
+.let-talk-section {
+  border-radius: 40px;
+  padding: 30px 50px;
+  padding-bottom: 40px;
+  gap:20px;
+  min-height: 250px;
+}
+.let-talk-section h2 {
+  font-size: 28px;
+  font-weight:500;
+}
+.let-talk-section .sub-c-title {
+  font-size:16px;
+  width: 100%;
+  letter-spacing: .1px;
+  line-height: 25px;
+}
+.contact-grid
+{
+     margin-top: 50px;
+    grid-template-columns: repeat(2, 1fr);
+    /* grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); */
+     row-gap: 30px;
+     column-gap: 30px;
+}
+.cp-third-section .query
+{
+    flex-direction: column;
+      margin-top: 100px;
+      width: 100%;
+      gap: 50px;
+}
+.left-query {
+  width: 100%;
+}
+.left-query-img {
+  width: 100%;
+  height: 650px;
+  object-fit: cover;
+}
+
+.query .right-query
+{
+   width: 100%;
+   margin-top: 0px;
+}
+}

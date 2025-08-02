@@ -1,0 +1,47 @@
+.settings-container {
+  padding: 30px;
+  max-width: 600px;
+  margin: 40px auto;
+  background: #ffffff; /* Secondary */
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  color: #330809; /* Sub Primary text */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.settings-tabs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+  border-bottom: 2px solid #651E1E;
+}
+
+.settings-tabs button {
+  flex: 1;
+  padding: 12px;
+  font-size: 16px;
+  border: none;
+  background-color: #651E1E; /* Primary */
+  color: #ffffff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 6px 6px 0 0;
+  margin-right: 8px;
+}
+
+.settings-tabs button:last-child {
+  margin-right: 0;
+}
+
+.settings-tabs button.active {
+  background-color: #330809; /* Sub Primary */
+  font-weight: bold;
+}
+
+.settings-tabs button:hover {
+  background-color: #4d1919;
+}
+
+.settings-content {
+  margin-top: 10px;
+}

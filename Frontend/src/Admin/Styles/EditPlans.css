@@ -1,0 +1,90 @@
+/* Modern EditPlan.css - Aaraya Theme Integration */
+
+.edit-plan-container {
+  max-width: 480px;
+  margin: 48px auto;
+  padding: 40px 32px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(101, 30, 30, 0.2), 0 1.5px 6px rgba(51, 8, 9, 0.15);
+  font-family: 'Inter', 'Poppins', 'Segoe UI', Arial, sans-serif;
+  border: 1.5px solid #ccb8b8;
+}
+
+.edit-plan-container h2 {
+  text-align: left;
+  margin-bottom: 2rem;
+  color: #651E1E;
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.edit-plan-form label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #651E1E;
+  letter-spacing: 0.2px;
+}
+
+.edit-plan-form input,
+.edit-plan-form select,
+.edit-plan-form textarea {
+  width: 95%;
+  padding: 13px 16px;
+  margin-bottom: 1.3rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 1.08rem;
+  background: #fdf5f5;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-weight: 500;
+  color: #330809;
+  box-shadow: 0 1px 2px rgba(101, 30, 30, 0.08);
+  resize: vertical;
+}
+
+.edit-plan-form input:focus,
+.edit-plan-form select:focus,
+.edit-plan-form textarea:focus {
+  border-color: #651E1E;
+  outline: none;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(101, 30, 30, 0.15);
+}
+
+.edit-plan-form button[type="submit"] {
+  width: 100%;
+  background: linear-gradient(90deg, #651E1E 60%, #330809 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.18s;
+  margin-top: 0.5rem;
+  box-shadow: 0 2px 8px rgba(101, 30, 30, 0.15);
+  letter-spacing: 0.5px;
+}
+
+.edit-plan-form button[type="submit"]:hover {
+  background: linear-gradient(90deg, #330809 0%, #651E1E 100%);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 4px 16px rgba(51, 8, 9, 0.18);
+}
+
+.edit-plan-error {
+  color: #651E1E;
+  background: #fdf2f2;
+  border: 1.5px solid #f5bcbc;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 1.08rem;
+  font-weight: 600;
+  padding: 12px 0;
+  box-shadow: 0 1px 4px rgba(101, 30, 30, 0.07);
+}

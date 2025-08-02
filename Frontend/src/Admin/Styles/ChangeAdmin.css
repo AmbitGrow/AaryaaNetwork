@@ -1,0 +1,85 @@
+.change-email-container {
+  width: 100%;
+  max-width: 440px;
+  background: #fff;
+  padding: 32px;
+  margin: 48px auto;
+  border-radius: 14px;
+  box-shadow: 0 6px 28px rgba(101, 30, 30, 0.15), 0 1px 6px rgba(51, 8, 9, 0.1);
+  border: 1.5px solid #ddd;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.change-email-container h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #651E1E;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.change-email-container input {
+  width: 95%;
+  padding: 14px 16px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1.5px solid #ccc;
+   background: #fdf5f5;
+  font-size: 1rem;
+  transition: all 0.2s;
+  color: #330809;
+  font-weight: 500;
+}
+
+.change-email-container input:focus {
+  border-color: #651E1E;
+  outline: none;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(101, 30, 30, 0.15);
+}
+
+.change-email-container button {
+  width: 100%;
+  padding: 14px;
+  background-color: #651E1E;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1.05rem;
+  cursor: pointer;
+  margin-top: 16px;
+  letter-spacing: 0.4px;
+  box-shadow: 0 3px 10px rgba(101, 30, 30, 0.15);
+  transition: all 0.2s ease;
+}
+
+.change-email-container button:hover {
+  background-color: #330809;
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 14px rgba(51, 8, 9, 0.25);
+}
+
+.success {
+  color: #276749;
+  background: #e6fffa;
+  border: 1.5px solid #38b2ac;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 12px;
+}
+
+.error {
+  color: #c53030;
+  background: #fff5f5;
+  border: 1.5px solid #feb2b2;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 12px;
+}

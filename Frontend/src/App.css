@@ -1,0 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lexend:wght@100..900&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+:root {
+  --bg-color: white;
+  --primary-color: #651e1e;
+  --secondary-color: #330809;
+  --text-color: #212121;
+  --light-grey-color: #f5f5f5;
+  --black-color: rgb(0, 0, 0);
+  --font-family: "Inter", sans-serif;
+}
+body {
+  background-color: white;
+  color: black;
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+  overflow-x: hidden;
+}
+html {
+  scroll-behavior: smooth;
+}
+/* body {
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+} */
+.homepage-container,
+.contact-page-overall,
+.customized-page-overall {
+  margin-top: 130px;
+}
+.contact-page-overall {
+  margin-top: 150px;
+}
+@media (max-width: 798px) {
+  .homepage-container,
+  .customized-page-overall {
+    margin-top: 110px;
+  }
+  .contact-page-overall {
+    margin-top: 130px;
+  }
+}
+@media (max-width: 600px) {
+  .homepage-container,
+  .customized-page-overall {
+    margin-top: 105px;
+  }
+  .contact-page-overall {
+    margin-top: 110px;
+  }
+}
+@media (max-width: 500px) {
+  .homepage-container,
+  .customized-page-overall {
+    margin-top: 100px;
+  }
+  .contact-page-overall {
+    margin-top: 100px;
+  }
+}
