@@ -452,6 +452,7 @@ function ContactPage() {
                     className="send-message"
                     type="submit"
                     disabled={loading}
+                    style={{ cursor: loading ? "not-allowed" : "pointer" }}
                   >
                     {loading ? "Sending..." : "Send Message"}
                   </button>
