@@ -41,7 +41,7 @@ function ContactPage() {
   });
   const regexValidators = {
     // First and last names: Start with a capital letter, allow letters, spaces, hyphens, apostrophes, and must be 2+ characters.
-    firstName: /^(?!.*(.)\1{2,})[A-Z][a-zA-Z-' ]{1,}$/,
+    firstName: /^(?!.*(.)\1{2,})[a-zA-Z-' ]{1,}$/,
 
     // lastName: /^(?!.*(.)\1{2,})[A-Z][a-zA-Z-' ]{1,}$/,
     lastName: /.*[a-zA-Z].*$/,
@@ -452,6 +452,7 @@ function ContactPage() {
                     className="send-message"
                     type="submit"
                     disabled={loading}
+                    style={{ cursor: loading ? "not-allowed" : "pointer" }}
                   >
                     {loading ? "Sending..." : "Send Message"}
                   </button>
