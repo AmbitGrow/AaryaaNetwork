@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const serverless = require("serverless-http");
 const connectDB = require("./config/db");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
@@ -33,9 +32,9 @@ const adminSettingsRoutes = require("./routes/SettingsRoutes");
 app.use("/api/settings", adminSettingsRoutes);
 
 
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => {
-//   console.log(`Server started on port ${PORT}`);
-// });
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server started on port ${PORT}`);
+});
 
-module.exports.handler = serverless(app);
+// module.exports.handler = serverless(app);
