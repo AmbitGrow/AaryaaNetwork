@@ -20,8 +20,8 @@ router.post("/set-gst", auth, setGst);
 router.post("/logout", (req, res) => {
   res.clearCookie("token", {
     httpOnly: true,
-    secure: false, // true if using HTTPS
-    sameSite: "lax",
+    secure: true, // true if using HTTPS
+    sameSite: "none",
   });
   res.json({ message: "Logged out successfully" });
 });
