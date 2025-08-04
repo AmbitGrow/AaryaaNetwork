@@ -25,7 +25,7 @@ const AddAdmin = () => {
     }
 
     try {
-      const res = await API.post("/settings/add", { email, password } ,{withCredentials: true});
+      const res = await API.post("/api/settings/add", { email, password } ,{withCredentials: true});
       // setMessage(res.data.message);
       toast.success("Admin added successfully!");
       setEmail("");

@@ -81,7 +81,7 @@ const CustomizedPage = () => {
 
     const fetchPlans = async () => {
       try {
-        const res = await API.get("/plans/filter", {
+        const res = await API.get("/api/plans/filter", {
           params: { planType },
         });
         const data = res.data;

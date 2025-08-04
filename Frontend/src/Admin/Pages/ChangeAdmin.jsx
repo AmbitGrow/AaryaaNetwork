@@ -16,7 +16,7 @@ const ChangeEmail = () => {
   const handleSendOtp = async () => {
     try {
       const res = await API.post(
-        "/settings/change-email/request-otp",
+        "/api/settings/change-email/request-otp",
         {
           currentEmail,
         },

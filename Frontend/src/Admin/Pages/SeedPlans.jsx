@@ -12,7 +12,7 @@ const SeedPlans = () => {
     formData.append("file", file);
 
     try {
-      const res = await API.post("/plans/seed", formData, {
+      const res = await API.post("/api/plans/seed", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

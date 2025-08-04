@@ -49,7 +49,7 @@ useAutoLogout();
     const fetchPlan = async () => {
       setLoading(true);
       try {
-        const res = await API.get(`/plans/${id}`);
+        const res = await API.get(`/api/plans/${id}`);
 
         setFormData({
           speed: res.data.speed || "",
@@ -118,7 +118,7 @@ useAutoLogout();
           : [],
         androidBox: formData.androidBox === "Yes"
       };
-      await API.put(`/plans/${id}`, payload,{ withCredentials: true });
+      await API.put(`/api/plans/${id}`, payload,{ withCredentials: true });
       toast.success("Plan updated successfully!");
       navigate("/admin/view-plans");
     } catch (err) {

@@ -12,7 +12,7 @@ useAutoLogout();
   useEffect(() => {
     const fetchGst = async () => {
       try {
-        const res = await API.get("/get-gst");
+        const res = await API.get("/api/get-gst");
         setGstPercent(res.data.gstPercent ?? "");
       // eslint-disable-next-line no-unused-vars
       } catch (err) {
@@ -36,7 +36,7 @@ useAutoLogout();
 
     setSaving(true);
     try {
-      await API.post("/set-gst", { gstPercent: parsedGst }, { withCredentials: true });
+      await API.post("/api/set-gst", { gstPercent: parsedGst }, { withCredentials: true });
       toast.success(`GST updated to ${parsedGst}%`);
     // eslint-disable-next-line no-unused-vars
     } catch (_) {

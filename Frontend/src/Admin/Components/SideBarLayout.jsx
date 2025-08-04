@@ -17,7 +17,7 @@ const SidebarLayout = () => {
   const handleLogout = async () => {
     try {
       await API.post(
-        "/logout",
+        "/api/logout",
         {},
         {
           withCredentials: true, // Needed to send cookies

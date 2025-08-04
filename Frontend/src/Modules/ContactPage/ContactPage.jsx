@@ -122,7 +122,7 @@ function ContactPage() {
         };
       }
 
-      const res = await API.post("/contact/post", requestBody);
+      const res = await API.post("/api/contact/post", requestBody);
 
       const data = res.data;
 

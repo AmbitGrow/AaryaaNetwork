@@ -90,7 +90,7 @@ useAutoLogout();
     };
 
     try {
-      await API.post("/plans", payload,{withCredentials: true});
+      await API.post("/api/plans", payload,{withCredentials: true});
       toast.success("Plan added successfully!");
       navigate("/admin/add-plans");
       setFormData({});

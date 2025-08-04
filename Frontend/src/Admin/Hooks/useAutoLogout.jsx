@@ -14,7 +14,7 @@ export default function useAutoLogout() {
   useEffect(() => {
     const logout = async () => {
       try {
-        await API.post("/logout", {}, {
+        await API.post("/api/logout", {}, {
           withCredentials: true,
         });
       } catch (error) {

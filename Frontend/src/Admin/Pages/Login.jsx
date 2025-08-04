@@ -23,7 +23,7 @@ const AdminLogin = () => {
 
     if (validateInput()) {
       try {
-        const res = await API.post("/login", { email, password });
+        const res = await API.post("/api/login", { email, password });
         localStorage.setItem("token", res.data.token);
         navigate("/admin/dashboard");
       } catch (err) {

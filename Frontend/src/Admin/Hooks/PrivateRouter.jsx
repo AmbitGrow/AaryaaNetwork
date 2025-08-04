@@ -10,7 +10,7 @@ const PrivateRouter = ({ children }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await API.get("/check-auth", {
+        const res = await API.get("/api/check-auth", {
           withCredentials: true,
         });
         setIsAuthenticated(res.data.authenticated);

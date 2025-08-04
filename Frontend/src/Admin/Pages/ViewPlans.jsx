@@ -43,7 +43,7 @@ useAutoLogout();
     setLoading(true);
     setError("");
     try {
-      const res = await API.get("/plans", {
+      const res = await API.get("/api/plans", {
         withCredentials: true,
       });
       setPlans(res.data);
@@ -63,7 +63,7 @@ useAutoLogout();
   const deletePlan = async (id) => {
     setDeletingPlanId(id);
     try {
-      await API.delete(`/plans/${id}`, {
+      await API.delete(`/api/plans/${id}`, {
         withCredentials: true,
       });
       fetchPlans();

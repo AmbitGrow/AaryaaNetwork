@@ -25,7 +25,7 @@ useAutoLogout();
 
     try {
       const res = await API.post(
-        "/settings/change-password",
+        "/api/settings/change-password",
         {
           email: email,
           currentPassword: currentPass,
