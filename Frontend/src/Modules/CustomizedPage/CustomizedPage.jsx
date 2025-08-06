@@ -3,23 +3,30 @@ import axios from "axios";
 import API from "../../Admin/Api/Api";
 import { useNavigate } from "react-router-dom";
 import "./CustomizedPage.css";
-import akka from "../../assets/Contact/akka.png";
+import akka from "../../assets/Contact/akka.webp";
 import { FaArrowRightLong } from "react-icons/fa6";
 import Footer from "../../Components/Footer/Footer";
-import Netflix from "../../assets/OttListLogo/Netflix.jpg";
-import Sunnxt from "../../assets/OttListLogo/SunNxt.jpg";
-import Hotstar from "../../assets/OttListLogo/JioHotstar.jpg";
-import PrimeVideo from "../../assets/OttListLogo/PrimeVideo.jpg";
-import Zee5 from "../../assets/OttListLogo/Zee5.jpg";
-import SonyLIv from "../../assets/OttListLogo/sony.jpg";
-import Aha from "../../assets/OttListLogo/Aha.jpg";
-import AppleTv from "../../assets/OttListLogo/AppleTv.jpg";
-import XstreamPlay from "../../assets/OttListLogo/XstreamPlay.jpg";
-import skyplay from "../../assets/skyplay.jpg";
+import Netflix from "../../assets/OttListLogo/Netflix.webp";
+import Sunnxt from "../../assets/OttListLogo/SunNxt.webp";
+import Hotstar from "../../assets/OttListLogo/JioHotstar.webp";
+import PrimeVideo from "../../assets/OttListLogo/PrimeVideo.webp";
+import Zee5 from "../../assets/OttListLogo/Zee5.webp";
+import SonyLIv from "../../assets/OttListLogo/sony.webp";
+import Aha from "../../assets/OttListLogo/Aha.webp";
+import AppleTv from "../../assets/OttListLogo/AppleTv.webp";
+import XstreamPlay from "../../assets/OttListLogo/XstreamPlay.webp";
+
 import aaryaanetwork from "../../assets/AaryaaLogo.png";
-import railwire from "../../assets/RailWire.jpg";
-import bsnl from "../../assets/BSNLlogo.jpg";
-import airtelxstream from "../../assets/AirtelLogo.jpg";
+import skyplay from "../../assets/skyplay.webp";
+import railwire from "../../assets/RailWire.webp";
+import bsnl from "../../assets/BSNLlogo.webp";
+import airtelxstream from "../../assets/AirtelLogo.webp";
+
+
+
+
+
+
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 const DURATION_OPTIONS = ["Monthly", "Quarterly", "Half-Yearly", "Yearly"];

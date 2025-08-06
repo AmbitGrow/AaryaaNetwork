@@ -36,27 +36,27 @@
 }
 .slider-box-banner1 {
   animation-delay: 0s;
-  background-image: url("../../assets/Slides/b1.jpg");
+  background-image: url("../../assets/Slides/b1.webp");
   background-size: cover;
   background-position: center;
 }
 
 .slider-box-banner2 {
   animation-delay: 4s;
-  background-image: url("../../assets/Slides/b2.jpg");
+  background-image: url("../../assets/Slides/b2.webp");
   background-size: cover;
   background-position: center;
 }
 
 .slider-box-banner3 {
   animation-delay: 8s;
-  background-image: url("../../assets/Slides/b3.jpg");
+  background-image: url("../../assets/Slides/b3.webp");
   background-size: cover;
   background-position: center;
 }
 .slider-box-banner4 {
   animation-delay: 12s;
-  background-image: url("../../assets/Slides/b4.jpg");
+  background-image: url("../../assets/Slides/b4.webp");
   background-size: cover;
   background-position: center;
 }

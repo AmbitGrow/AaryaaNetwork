@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "../HomePage/HomePage.css";
 import logo from "../../assets/AaryaaLogo.png";
-import remote from "../../assets/remote.png";
+import remote from "../../assets/remote.webp";
 // import { useEffect } from 'react';
 import { useLocation } from "react-router-dom";
-import CustomizedStyleleft from "../../assets/CustomizedStyleLeft.png";
-import { Swiper, SwiperSlide } from "swiper/react";
+import CustomizedStyleleft from "../../assets/CustomizedStyleLeft.webp";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import consultation from "../../assets/consultation.gif";
 import { IoLogoWhatsapp } from "react-icons/io";
 import { MdEmail } from "react-icons/md";
@@ -21,78 +19,40 @@ import { FaDotCircle } from "react-icons/fa";
 import ClinetTestimonials from "../../Components/Client/ClientTestinomials";
 import SliderPage from "../../Components/Plans/SliderPage";
 import Footer from "../../Components/Footer/Footer";
-import Pic1 from "../../assets/ClientImage/Picture1.png";
-import Pic2 from "../../assets/ClientImage/Picture2.jpg";
-import Pic3 from "../../assets/ClientImage/Picture3.jpg";
-import Pic4 from "../../assets/ClientImage/Picture4.png";
-import Pic5 from "../../assets/ClientImage/Picture5.jpg";
-import Pic6 from "../../assets/ClientImage/Picture6.jpg";
-import Pic7 from "../../assets/ClientImage/Picture7.jpg";
-import Pic8 from "../../assets/ClientImage/Picture8.jpg";
-import Pic9 from "../../assets/ClientImage/Picture9.png";
-import Pic10 from "../../assets/ClientImage/Picture10.jpg";
-import Pic11 from "../../assets/ClientImage/Picture11.jpg";
-import Pic12 from "../../assets/ClientImage/Picture12.jpg";
-import img1 from "../../assets/TVChannel/img1.png";
-import img2 from "../../assets/TVChannel/img2.png";
-import img3 from "../../assets/TVChannel/img3.png";
-import img4 from "../../assets/TVChannel/img4.png";
-import img5 from "../../assets/TVChannel/img5.png";
-import img6 from "../../assets/TVChannel/img6.png";
-import img7 from "../../assets/TVChannel/img7.png";
-import img8 from "../../assets/TVChannel/img8.png";
-import img9 from "../../assets/TVChannel/img9.png";
-import img10 from "../../assets/TVChannel/img10.png";
-import ottimg1 from "../../assets/OTT/ott1.png";
-import ottimg2 from "../../assets/OTT/ott2.png";
-import ottimg3 from "../../assets/OTT/ott3.png";
-import ottimg4 from "../../assets/OTT/ott4.png";
-import ottimg5 from "../../assets/OTT/ott5.png";
-import ottimg6 from "../../assets/OTT/ott6.png";
-import ottimg7 from "../../assets/OTT/ott7.png";
-import ottimg8 from "../../assets/OTT/ott8.png";
-import ottimg9 from "../../assets/OTT/ott9.png";
+import Pic1 from "../../assets/ClientImage/Picture1.webp";
+import Pic2 from "../../assets/ClientImage/Picture2.webp";
+import Pic3 from "../../assets/ClientImage/Picture3.webp";
+import Pic4 from "../../assets/ClientImage/Picture4.webp";
+import Pic5 from "../../assets/ClientImage/Picture5.webp";
+import Pic6 from "../../assets/ClientImage/Picture6.webp";
+import Pic7 from "../../assets/ClientImage/Picture7.webp";
+import Pic8 from "../../assets/ClientImage/Picture8.webp";
+import Pic9 from "../../assets/ClientImage/Picture9.webp";
+import Pic10 from "../../assets/ClientImage/Picture10.webp";
+import Pic11 from "../../assets/ClientImage/Picture11.webp";
+import Pic12 from "../../assets/ClientImage/Picture12.webp";
+import img1 from "../../assets/TVChannel/img1.webp";
+import img2 from "../../assets/TVChannel/img2.webp";
+import img3 from "../../assets/TVChannel/img3.webp";
+import img4 from "../../assets/TVChannel/img4.webp";
+import img5 from "../../assets/TVChannel/img5.webp";
+import img6 from "../../assets/TVChannel/img6.webp";
+import img7 from "../../assets/TVChannel/img7.webp";
+import img8 from "../../assets/TVChannel/img8.webp";
+import img9 from "../../assets/TVChannel/img9.webp";
+import img10 from "../../assets/TVChannel/img10.webp";
+import ottimg1 from "../../assets/OTT/ott1.webp";
+import ottimg2 from "../../assets/OTT/ott2.webp";
+import ottimg3 from "../../assets/OTT/ott3.webp";
+import ottimg4 from "../../assets/OTT/ott4.webp";
+import ottimg5 from "../../assets/OTT/ott5.webp";
+import ottimg6 from "../../assets/OTT/ott6.webp";
+import ottimg7 from "../../assets/OTT/ott7.webp";
+import ottimg8 from "../../assets/OTT/ott8.webp";
+import ottimg9 from "../../assets/OTT/ott9.webp";
 import { MdCastConnected } from "react-icons/md";
 
 import { MdInstallDesktop } from "react-icons/md";
-
-const banners = [
-  {
-    title: "Enjoy Seamless Streaming With Our Lightning",
-    subtitle: "Fast Fiber Internet",
-    desc: "Stream, game, and work without interruptions. Enjoy fiber-speed internet built for your lifestyle.",
-    className: "banner1",
-    button: "Check Our Plans",
-  },
-  {
-    title: "Aaryaa Fibernet – Speed That Connects.",
-    subtitle: "Smart. Seamless. Secure.",
-    desc: "Enjoy blazing-fast internet, HD TV, OTT apps, gaming, and 24×7 surveillance all with one powerful fibre connection.",
-    className: "banner2",
-    button: "Book Now",
-  },
-  {
-    title: "Live the Fiber Life with Aaryaa",
-    subtitle: "Next-Level Streaming. Next-Level Speed",
-    desc: "Aaryaa delivers blazing-fast internet and nonstop entertainment for your modern lifestyle",
-    className: "banner3",
-    button: "Check Our Plans",
-  },
-  {
-    title: "Live the Fiber Life with Aaryaa",
-    subtitle: "Next-Level Streaming. Next-Level Speed",
-    desc: "Aaryaa delivers blazing-fast internet and nonstop entertainment for your modern lifestyle",
-    className: "banner3",
-    button: "Check Our Plans",
-  },
-  {
-    title: "Live the Fiber Life with Aaryaa",
-    subtitle: "Next-Level Streaming. Next-Level Speed",
-    desc: "Aaryaa delivers blazing-fast internet and nonstop entertainment for your modern lifestyle",
-    className: "banner3",
-    button: "Check Our Plans",
-  },
-];
 
 import { useNavigate } from "react-router-dom";
 import BannerSection from "../../Components/BannerSection/BannerSection";

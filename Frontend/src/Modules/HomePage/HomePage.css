@@ -335,7 +335,7 @@
 .left-section .about-img {
   width: 100%;
   height: 700px;
-  background: url("../../assets/aboutimg.jpg");
+  background: url("../../assets/aboutimg.webp");
   background-repeat: no-repeat;
   background-position: -220px;
   background-size: cover;
@@ -578,7 +578,7 @@
 .choose-us-right-section .img-box {
   width: 230px;
   height: 310px;
-  background: url("../../assets/Choose-us-img.jpg");
+  background: url("../../assets/Choose-us-img.webp");
   border-radius: 20px;
   border: 1px solid #ccc;
   background-size: cover;
@@ -604,7 +604,7 @@
 .choose-us-right-section .info-box .white-circle {
   width: 45px;
   height: 45px;
-  background: url("../../assets/Skoil.jpg");
+  background: url("../../assets/Skoil.webp");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: 0px 0px;
@@ -713,7 +713,7 @@
   padding: 0rem 11rem;
 }
 .connect-section {
-  background: url("../../assets/connectbg.png");
+  background: url("../../assets/connectbg.webp");
   width: 100%;
   border-radius: 40px;
   padding: 100px 50px;

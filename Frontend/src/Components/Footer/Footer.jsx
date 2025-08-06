@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../assets/FooterLogo.png";
+import logo from "../../assets/FooterLogo.webp";
 // import logo from "../../assets/FooterLogo.png";
 import "../Footer/Footer.css";
 import { AiFillInstagram } from "react-icons/ai";

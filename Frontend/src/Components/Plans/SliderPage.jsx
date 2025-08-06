@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Decration from "../../assets/Slides/Decration.png";
-import AaryaaBoxLogo from "../../assets/Slides/AaryaaBoxLogo.png";
+import Decration from "../../assets/Slides/Decration.webp";
+import AaryaaBoxLogo from "../../assets/Slides/AaryaaBoxLogo.webp";
 import "./SliderPage.css";
-import netflix from '../../assets/OttListLogo/Netflix.jpg';
-import SunNxt from '../../assets/OttListLogo/SunNxt.jpg'
-import Hotstar from '../../assets/OttListLogo/JioHotstar.jpg'
-import amazonprime from '../../assets/OttListLogo/PrimeVideo.jpg'
-import Zee5 from '../../assets/OttListLogo/Zee5.jpg'
-import sonyliv from '../../assets/OttListLogo/sony.jpg'
-import aha from '../../assets/OttListLogo/Aha.jpg'
+import netflix from '../../assets/OttListLogo/Netflix.webp';
+import SunNxt from '../../assets/OttListLogo/SunNxt.webp'
+import Hotstar from '../../assets/OttListLogo/JioHotstar.webp'
+import amazonprime from '../../assets/OttListLogo/PrimeVideo.webp'
+import Zee5 from '../../assets/OttListLogo/Zee5.webp'
+import sonyliv from '../../assets/OttListLogo/sony.webp'
+import aha from '../../assets/OttListLogo/Aha.webp'
 
 
 

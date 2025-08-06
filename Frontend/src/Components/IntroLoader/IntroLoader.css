@@ -5,6 +5,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
 }
 .intro-text {
   display: flex;
@@ -17,10 +21,11 @@
 }
 .intro-text p {
   letter-spacing: 2px;
-  font-size: 18px;
+  font-size: 17px;
+  margin-top: -15px;
 }
 .intro-logo {
-  width: 200px;
+  width: 220px;
 }
 
 @keyframes popIn {

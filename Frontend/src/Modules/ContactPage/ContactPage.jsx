@@ -4,9 +4,9 @@ import API from "../../Admin/Api/Api";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { FaArrowRightLong } from "react-icons/fa6";
-import CustomizedStyleleft from "../../assets/CustomizedStyleLeft.png";
+import CustomizedStyleleft from "../../assets/Contact/CustomizedStyleleft.webp";
 import { toast } from "react-toastify";
-import QueryImg from "../../assets/Contact/QueryImg.jpg";
+import QueryImg from "../../assets/Contact/QueryImg.webp";
 import Footer from "../../Components/Footer/Footer";
 import "./Contactpage.css";
 function ContactPage() {

@@ -1,7 +1,7 @@
 .footer-main {
   margin: 20px;
   /* margin-top: 8rem; */
-  background: url("../../assets/Footerbg.png"), #651e1e;
+  background: url("../../assets/Footerbg.webp"), #651e1e;
   border-radius: 30px;
   padding: 0px 50px;
   padding-top: 40px;
@@ -148,7 +148,7 @@
 .footer-three .map-div .map-img-div {
   width: 100%;
   height: 100%;
-  background: url("../../assets/footermap.jpg");
+  background: url("../../assets/footermap.webp");
   border-radius: 9px;
   background-size: cover;
   border: 1px solid #dfdcdc;

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import "./IntroLoader.css"; // Create this file for animation styles
-import logo from "../../assets/AaryaaLogo.png"; // replace with your actual logo path
+import "./IntroLoader.css"; 
+import logo from "../../assets/AaryaaLogo.webp";
 
 const IntroLoader = ({ onFinish }) => {
-  const [loadTime, setLoadTime] = useState(2000); // default delay
+  const [loadTime, setLoadTime] = useState(2000); 
 
   useEffect(() => {
     const connection =
