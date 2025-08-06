@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 dotenv.config();
 
 const app = express();
-app.set("trust proxy", 1); // Or just `true` — enables correct detection of X-Forwarded-* headers
+// app.set("trust proxy", 1); // Or just `true` — enables correct detection of X-Forwarded-* headers
 
 app.use(express.json());
 app.use(

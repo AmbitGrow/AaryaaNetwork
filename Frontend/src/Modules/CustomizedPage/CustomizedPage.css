@@ -526,7 +526,7 @@
 }
 .ott-logo-container {
   display: flex;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   align-items: center;
   gap: 25px;
   width: 40px;
@@ -859,7 +859,7 @@
   }
   .ott-logo-container {
     display: flex;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     align-items: center;
     gap: 20px;
     width: 30px;
