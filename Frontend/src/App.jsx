@@ -1,18 +1,18 @@
-import React from 'react';
+import React from "react";
 import { Routes, Route } from "react-router-dom";
-import WebRouter from './WebRouter';
-import './App.css';
-import AdminApp from './Admin/AdminApp.jsx';
-import { ToastContainer } from 'react-toastify';
+import WebRouter from "./WebRouter";
+import "./App.css";
+import AdminApp from "./Admin/AdminApp.jsx";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
     <>
       <Routes>
         <Route path="/*" element={<WebRouter />} />
-         <Route path="/admin/*"  element={<AdminApp/>}/>
+        <Route path="/admin/*" element={<AdminApp />} />
       </Routes>
-           <ToastContainer
+      <ToastContainer
         position="top-center"
         autoClose={1000}
         hideProgressBar={true}
@@ -24,7 +24,7 @@ function App() {
         pauseOnHover
         theme="colored"
       />
-     </>
+    </>
   );
 }
 

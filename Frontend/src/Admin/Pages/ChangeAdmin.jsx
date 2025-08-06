@@ -36,7 +36,7 @@ const ChangeEmail = () => {
 
   const handleVerifyOtpAndUpdate = async () => {
     try {
-      const res = await API.post("/settings/change-email/verify-and-update", {
+      const res = await API.post("/api/settings/change-email/verify-and-update", {
         currentEmail,
         newEmail,
         otp,
