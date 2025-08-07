@@ -33,13 +33,13 @@ export default function BannerSection() {
       button: "Check Our Plans",
     },
     {
-      title: "Live the Fiber Life with Aaryaa",
-      subtitle: "Next-Level Streaming. Next-Level Speed",
-      desc: "Aaryaa delivers blazing-fast internet and nonstop entertainment for your modern lifestyle",
+      title: "Enjoy Seamless Streaming With Our Lightning",
+      subtitle: "Fast Fiber Internet",
+      desc: "Stream, game, and work without interruptions. Enjoy fiber-speed internet built for your lifestyle.",
       className: "banner1",
       button: "Check Our Plans",
     },
-    {
+   {
       title: "Live the Fiber Life with Aaryaa",
       subtitle: "Next-Level Streaming. Next-Level Speed",
       desc: "Aaryaa delivers blazing-fast internet and nonstop entertainment for your modern lifestyle",
