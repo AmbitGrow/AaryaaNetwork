@@ -4,7 +4,7 @@ import API from "../../Admin/Api/Api";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { FaArrowRightLong } from "react-icons/fa6";
-import CustomizedStyleleft from "../../assets/Contact/CustomizedStyleleft.webp";
+import CustomizedStyleleft from "../../assets/Contact/CustomizedStyleLeft.webp";
 import { toast } from "react-toastify";
 import QueryImg from "../../assets/Contact/QueryImg.webp";
 import Footer from "../../Components/Footer/Footer";
