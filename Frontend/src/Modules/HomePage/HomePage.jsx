@@ -453,37 +453,7 @@ function HomePage() {
                 </div>
               ))}
             </div>
-            {/* <div className="slider-scroll scroll-animation">
-                            {
-                                looplogo.map((logox, index) => (
-                                <div className="slides" key={index}>
-                                  <div className="slides-in">
-                                    <img src={logox} alt={`logo ${index + 1}`} />
-                                  </div>
-                                </div>
-                              )
-                            )}
-                            {[...Array(2)].flatMap(() =>
-                              ClientEsteemedlogo.map((logox, index) => (
-                                <div className="slides" key={`${index}-${logox}`}>
-                                  <div className="slides-in">
-                                    <img src={logox} alt={`logo-${index}`} />
-                                  </div>
-                                </div>
-                              ))
-                            )}
-                    </div> */}
-            {/* <div className="slider"> */}
-            {/* <div className="slide-track">
-                      {ClientEsteemedlogo.concat(ClientEsteemedlogo).map((logox, index) => (
-                        <div className="slides" key={index}>
-                           <div className="slides-in">
-                               <img src={logox} alt={`logo - ${index}`} />
-                           </div>
-                        </div>
-                      ))}
-                    </div> */}
-            {/* </div> */}
+           
           </div>
         </div>
 
