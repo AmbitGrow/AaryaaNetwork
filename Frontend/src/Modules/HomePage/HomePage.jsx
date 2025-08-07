@@ -346,7 +346,7 @@ function HomePage() {
                   </h2>
                   <p className="description">
                     Welcome to Aaryaa Network, guided by our visionary Managing
-                    Director committed to seamless and smart connectivity..
+                    Director committed to seamless and smart connectivity.
                   </p>
                   <div className="contact-info">
                     <p className="c-p1">C. Anandharaj</p>
