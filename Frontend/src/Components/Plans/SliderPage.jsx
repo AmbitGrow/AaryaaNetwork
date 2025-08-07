@@ -157,7 +157,7 @@ export default function SliderPage() {
               Internet. IPTV. OTT.<span> All in One.</span>
             </h2>
             <p className="sub-heading">
-              Choose the perfect plan with Aaraaya Network internet, TV, and OTT
+              Choose the perfect plan with Aaryaa Network internet, TV, and OTT
               bundles. Stream, surf, and enjoy seamlessly, all in one place.
             </p>
             <div
