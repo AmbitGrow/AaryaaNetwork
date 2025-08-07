@@ -700,7 +700,7 @@
   }
 }
 
-@media (max-width: 450px) {
+@media (max-width: 500px) {
   .slider-box {
     height: 300px;
   }
