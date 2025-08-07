@@ -292,7 +292,7 @@ function HomePage() {
                 </div>
                 <div className="txt">
                   <h3>Because ordinary internet just isn’t enough anymore</h3>
-                  <p className="description">
+                  <p className="description-why">
                     We bring you high-speed, no-hassle connectivity that fits
                     your life whether you stream, game, work, or chill. It’s
                     fast, flexible, and fully supported by people who care

@@ -5,10 +5,9 @@
 }
 
 .input-flex-box .error-contact{
-  color: #c62828;           /* Deep red */
-  font-size: 12px;      /* Slightly smaller than normal text */
+  color: #c62828;           
+  font-size: 12px;     
   margin-top: 10px;
-  /* text-align: center; */
   font-weight: 500;
   letter-spacing: 0.3px;
   transition: all 0.3s ease-in-out;
@@ -143,14 +142,7 @@
   font-size: 15px;
   letter-spacing: 0.5px;
 }
-/* .contact-box .contact-bottom-img
-{
-    width: 150px;
-    background-image: url('../../assets/Contact/Snkl.webp');
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 0px;
-} */
+
 .contact-bottom .contact-bottom-circle {
   background-color: white;
   border: 1px solid #e4e4e4;
@@ -315,6 +307,14 @@ textarea:-webkit-autofill {
 }
 
 
+@media (max-width: 1250px) {
+.cp-first-section,
+.cp-second-section,
+.cp-third-section {
+  padding: 0rem 3rem;
+}
+
+}
 @media (max-width: 768px) {
   .selected-plan-summary-contact ul {
     grid-template-columns: 1fr;

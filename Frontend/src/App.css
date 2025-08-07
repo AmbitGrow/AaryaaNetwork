@@ -38,6 +38,17 @@ html {
 .contact-page-overall {
   margin-top: 150px;
 }
+
+
+@media (min-width: 2500px) {
+  body{
+  max-width: 2000px;
+  width: 100%;
+  margin: 0 auto;
+  position: relative;
+  }
+  
+}
 @media (max-width: 798px) {
   .homepage-container,
   .customized-page-overall {
