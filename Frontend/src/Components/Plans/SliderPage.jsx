@@ -2,16 +2,6 @@ import React, { useState, useEffect } from "react";
 import Decration from "../../assets/Slides/Decration.webp";
 import AaryaaBoxLogo from "../../assets/Slides/AaryaaBoxLogo.webp";
 import "./SliderPage.css";
-import netflix from '../../assets/OttListLogo/Netflix.webp';
-import SunNxt from '../../assets/OttListLogo/SunNxt.webp'
-import Hotstar from '../../assets/OttListLogo/JioHotstar.webp'
-import amazonprime from '../../assets/OttListLogo/PrimeVideo.webp'
-import Zee5 from '../../assets/OttListLogo/Zee5.webp'
-import sonyliv from '../../assets/OttListLogo/sony.webp'
-import aha from '../../assets/OttListLogo/Aha.webp'
-
-
-
 
 import logo from "../../assets/AaryaaLogo.png";
 
@@ -278,30 +268,16 @@ export default function SliderPage() {
                   </div>
                   <p className="card-includes">Also Includes</p>
                   <div className="ott-logos">
-                    <div className="ott-icon">
-                            <img src={Hotstar} alt="Hotstar" />
-                          </div>
-                          <div className="ott-icon">
-                            <img src={Zee5} alt="Zee5" />
-                          </div>
-                          <div className="ott-icon">
-                            <img src={SunNxt} alt="SunNxt" />
-                          </div>
-                          <div className="ott-icon">
-                            <img src={sonyliv} alt="sonyliv" />
-                          </div>
-                          <div className="ott-icon">
-                            <img src={aha} alt="aha" />
-                          </div>
-                          <div className="ott-etc-logo">
-                            <div className="ott-icon-etc">
-                              <img src={Hotstar} />
-                            </div>
-                            <div className="ott-icon-etc">
-                              <img src={Zee5} />
-                            </div>
-                            <div className="ott-icon-etcs">
-                            <p>etc</p>
+                    <div className="ott-icon ott-icon-hotstar"></div>
+                    <div className="ott-icon ott-icon-zee5"></div>
+                    <div className="ott-icon ott-icon-sunnxt"></div>
+                    <div className="ott-icon ott-icon-sonyliv"></div>
+                    <div className="ott-icon ott-icon-aha"></div>
+                    <div className="ott-etc-logo">
+                      <div className="ott-icon-etc ott-icon-etc-hotstar"></div>
+                      <div className="ott-icon-etc ott-icon-etc-zee5"></div>
+                      <div className="ott-icon-etcs">
+                        <p>etc</p>
                       </div>
                     </div>
                   </div>
@@ -348,28 +324,14 @@ export default function SliderPage() {
                   </div>
                   <p className="card-includes">Also Includes</p>
                   <div className="ott-logos">
-                    <div className="ott-icon">
-                      <img src={netflix} alt="AmazonPrime" />
-                    </div>
-                    <div className="ott-icon">
-                      <img src={amazonprime} alt="Hotstar" />
-                    </div>
-                    <div className="ott-icon">
-                      <img src={Hotstar} alt="Aha" />
-                    </div>
-                    <div className="ott-icon">
-                      <img src={Zee5} alt="JioCinema" />
-                    </div>
-                    <div className="ott-icon">
-                      <img src={aha} alt="SunNxt" />
-                    </div>
+                    <div className="ott-icon ott-icon-netflix"></div>
+                    <div className="ott-icon ott-icon-amazonprime"></div>
+                    <div className="ott-icon ott-icon-hotstar"></div>
+                    <div className="ott-icon ott-icon-zee5"></div>
+                    <div className="ott-icon ott-icon-aha"></div>
                     <div className="ott-etc-logo">
-                      <div className="ott-icon-etc">
-                        <img src={netflix} />
-                      </div>
-                      <div className="ott-icon-etc">
-                        <img src={amazonprime} />
-                      </div>
+                      <div className="ott-icon-etc ott-icon-netflix"></div>
+                      <div className="ott-icon-etc ott-icon-amazonprime"></div>
                       <div className="ott-icon-etcs">
                         <p>etc</p>
                       </div>

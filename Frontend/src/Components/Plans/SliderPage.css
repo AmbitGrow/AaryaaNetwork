@@ -339,7 +339,7 @@
 .ott-icon {
   width: 40px;
   height: 40px;
-  background: #651e1e;
+  /* background: #651e1e; */
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -347,14 +347,42 @@
   margin-top: 35px;
   cursor: pointer;
 }
-
-.ott-icon img,
-.ott-icon-etc img {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
+.ott-icon-hotstar,.ott-icon-etc-hotstar {
+  background-image: url("../../assets/OttListLogo/JioHotstar.webp");
+  background-size: cover;
+  background-position: center;
 }
+.ott-icon-zee5,.ott-icon-etc-zee5 {
+  background-image: url("../../assets/OttListLogo/Zee5.webp");
+  background-size: cover;
+  background-position: center;
+}
+.ott-icon-sunnxt {
+  background-image: url("../../assets/OttListLogo/SunNxt.webp");
+  background-size: cover;
+  background-position: center;
+}
+.ott-icon-sonyliv {
+  background-image: url("../../assets/OttListLogo/sony.webp");
+  background-size: cover;
+  background-position: center;
+}
+.ott-icon-aha {
+  background-image: url("../../assets/OttListLogo/Aha.webp");
+  background-size: cover;
+  background-position: center;
+}
+.ott-icon-netflix {
+  background-image: url("../../assets/OttListLogo/Netflix.webp");
+  background-size: cover;
+  background-position: center;
+}
+.ott-icon-amazonprime {
+  background-image: url("../../assets/OttListLogo/PrimeVideo.webp");
+  background-size: cover;
+  background-position: center;
+}
+
 .ott-logos .ott-etc-logo {
   display: flex;
   margin-left: 20px;
@@ -364,7 +392,6 @@
 .ott-etc-logo .ott-icon-etc {
   width: 40px;
   height: 40px;
-  background: #f9abab;
   border-radius: 50%;
   display: flex;
   align-items: center;
