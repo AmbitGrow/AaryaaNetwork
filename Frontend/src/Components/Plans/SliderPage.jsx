@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import Decration from "../../assets/Slides/Decration.webp";
 import AaryaaBoxLogo from "../../assets/Slides/AaryaaBoxLogo.webp";
 import "./SliderPage.css";
@@ -6,7 +7,6 @@ import "./SliderPage.css";
 import logo from "../../assets/AaryaaLogo.png";
 
 import { useNavigate } from "react-router-dom";
-
 export default function SliderPage() {
   const [activeCard, setActiveCard] = useState(null);
   const [selectedPlan, setSelectedPlan] = useState(null);
@@ -163,7 +163,6 @@ export default function SliderPage() {
             </p>
             <img src={Decration} className="box-decration"></img>
           </div>
-
           {activeCard && (
             <div key={activeCard} className="overlay-card slide-up">
               {getCardName() === "basic" && (
@@ -282,7 +281,6 @@ export default function SliderPage() {
                     </div>
                   </div>
                   <div className="tv-ott-channel">
-                    {/* <button className="tv-channel-btn">450+ Tv Channels</button> */}
                     <button className="ott-channel-btn power-ott">
                       23+ OTT Apps
                     </button>
