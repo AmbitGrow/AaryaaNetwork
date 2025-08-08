@@ -270,15 +270,7 @@
     transform: scale(1) rotate(5deg);
     margin-top: 30px;
   }
-  /* .custom-prev {
-    position: absolute;
-    top: -50px;
-    left: 3.5rem;
-  }
-  .custom-next {
-    top: -50px;
-    right: 3.5rem;
-  } */
+
   .testimonial-section .testimonial-swiper {
     padding-top: 20px;
   }

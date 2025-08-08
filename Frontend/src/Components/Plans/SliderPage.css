@@ -243,6 +243,7 @@
   font-weight: 700;
   letter-spacing: 0.5px;
   color: #651e1e;
+  width: 100%;
 }
 .card-title .card-subheading {
   font-size: 19px;
@@ -803,7 +804,7 @@
   }
 
   .card-title .card-heading {
-    font-size: 18px;
+    font-size: 16px;
   }
   .card-title .card-subheading {
     font-size: 16px;
