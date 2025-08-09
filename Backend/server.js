@@ -32,6 +32,10 @@ app.use("/api/", AdminRoutes);
 const adminSettingsRoutes = require("./routes/SettingsRoutes");
 app.use("/api/settings", adminSettingsRoutes);
 
+app.get("/api/ping", (req, res) => {
+  res.status(200).send("OK");
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, "0.0.0.0", () => {
