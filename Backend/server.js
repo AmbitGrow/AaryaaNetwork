@@ -20,6 +20,10 @@ app.use(cookieParser());
 
 connectDB();
 
+app.get("/api/ping", (req, res) => {
+  res.status(200).send("OK");
+});
+
 const contactRoutes=require("./routes/ContactRoutes");
 app.use("/api/contact",contactRoutes);
 
@@ -32,14 +36,9 @@ app.use("/api/", AdminRoutes);
 const adminSettingsRoutes = require("./routes/SettingsRoutes");
 app.use("/api/settings", adminSettingsRoutes);
 
-app.get("/api/ping", (req, res) => {
-  res.status(200).send("OK");
-});
 
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server started on port ${PORT}`);
 });
-
-// module.exports.handler = serverless(app);
