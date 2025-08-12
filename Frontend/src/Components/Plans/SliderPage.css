@@ -332,11 +332,15 @@
 .ott-logos-all {
   width: 100%;
   height: 50px;
-  background-image: url("../../assets/PowerOtt.png");
+  background-color: white;
   margin-top: 25px;
   background-size: contain;
   /* background-position: center; */
   background-repeat: no-repeat;
+}
+
+.ott-logos-power {
+  background-image: url("../../assets/PowerOtt.png");
 }
 .ott-logos-power-max {
   background-image: url("../../assets/PowermaxOtt.png");
@@ -729,10 +733,8 @@
   .ott-logos-all {
     width: 100%;
     height: 35px;
-    background-image: url("../../assets/PowerOtt.png");
     margin-top: 20px;
     background-size: contain;
-    /* background-position: center; */
     background-repeat: no-repeat;
   }
 
@@ -880,7 +882,6 @@
   .ott-logos-all {
     width: 100%;
     height: 32px;
-    background-image: url("../../assets/PowerOtt.png");
     margin-top: 20px;
     background-size: contain;
     background-repeat: no-repeat;
@@ -904,5 +905,17 @@
   }
   .aaryaa-logo-bottom img {
     width: 45px;
+  }
+}
+
+@media (max-width: 400px) {
+  .card-title .card-heading {
+    font-size: 15px;
+  }
+  .card-title .card-subheading {
+    font-size: 14px;
+  }
+    .card-title .card-subheading span {
+    font-size: 14px;
   }
 }

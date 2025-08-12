@@ -275,7 +275,7 @@
     height: 550px;
   }
   .banner1 {
-    background-image: url("../../assets/Banner/Banner1.webp");
+    background-image: url("../../assets/Banner/VBanner1.jpg");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -297,15 +297,16 @@
     background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, transparent);
   }
   .banner .banner-txt .ban-heading {
-    font-size: 27px;
+    font-size: 30px;
+    width: 80%;
     color: white;
-    line-height: 35px;
+    line-height: 40px;
   }
   .banner .banner-txt .ban-subheading {
-    font-size: 16px;
+    font-size: 17px;
   }
   .banner .banner-txt .dec {
-    font-size: 13px;
+    font-size: 15px;
     width: 70%;
     line-height: 20px;
     color: white;
@@ -346,28 +347,26 @@
 @media (max-width: 450px) {
   .herosection {
     width: 100%;
-    padding: 0px 0px;
-    margin-top: 0px;
   }
   .banner {
-    height: 500px;
+    height: 480px;
   }
   .banner .linear-black {
-    padding: 30px 25px;
+    padding: 25px 25px;
   }
   .banner .banner-txt .ban-heading {
-    font-size: 22px;
+    font-size: 27px;
     width: 90%;
     color: white;
-    line-height: 30px;
+    line-height: 38px;
   }
   .banner .banner-txt .ban-subheading {
-    font-size: 14px;
+    font-size: 16px;
   }
   .banner .banner-txt .dec {
-    font-size: 11px;
-    width: 80%;
-    line-height: 18px;
+    font-size: 14px;
+    width: 85%;
+    line-height: 22px;
   }
   .banner .banner-btn {
     margin-top: 30px;
@@ -415,18 +414,19 @@
     padding: 20px 20px;
   }
   .banner .banner-txt .ban-heading {
-    font-size: 20px;
+    font-size: 24px;
     width: 90%;
     color: white;
-    line-height: 25px;
+    line-height: 35px;
   }
   .banner .banner-txt .ban-subheading {
-    font-size: 12px;
+    font-size: 14px;
+    line-height: 20px;
   }
   .banner .banner-txt .dec {
-    font-size: 10px;
+    font-size: 12px;
     width: 80%;
-    line-height: 16px;
+    line-height: 20px;
   }
   .banner .banner-btn {
     margin-top: 25px;
@@ -460,4 +460,6 @@
     height: 11px;
     transform: scale(1.6);
   }
+
+  
 }
