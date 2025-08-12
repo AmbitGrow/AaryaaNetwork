@@ -5,7 +5,7 @@ import AaryaaBoxLogo from "../../assets/Slides/AaryaaBoxLogo.webp";
 import "./SliderPage.css";
 
 import logo from "../../assets/AaryaaLogo.png";
-import powerott from "../../assets/PowerOTT.png";
+import powerott from "../../assets/PowerOtt.png";
 import { useNavigate } from "react-router-dom";
 export default function SliderPage() {
   const [activeCard, setActiveCard] = useState(null);
