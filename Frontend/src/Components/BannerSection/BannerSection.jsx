@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 import "./BannerSection.css";
 import { useNavigate } from "react-router-dom";
-
 
 export default function BannerSection() {
   const navigate = useNavigate();
@@ -39,7 +38,7 @@ export default function BannerSection() {
       className: "banner1",
       button: "Check Our Plans",
     },
-   {
+    {
       title: "Live the Fiber Life with Aaryaa",
       subtitle: "Next-Level Streaming. Next-Level Speed",
       desc: "Aaryaa delivers blazing-fast internet and nonstop entertainment for your modern lifestyle",
@@ -47,6 +46,22 @@ export default function BannerSection() {
       button: "Check Our Plans",
     },
   ];
+
+  useEffect(() => {
+    const swiperEl = document.querySelector(".banner-swiper")?.swiper;
+    if (!swiperEl) return;
+
+    swiperEl.on("slideChange", () => {
+      const activeIndex = swiperEl.realIndex;
+      const bullets = document.querySelectorAll(".custom-pagination .swiper-pagination-bullet");
+
+      // Map slides to 3 bullet indexes
+      const pairIndex = activeIndex % 3;
+      bullets.forEach((bullet, i) => {
+        bullet.classList.toggle("swiper-pagination-bullet-active", i === pairIndex);
+      });
+    });
+  }, []);
 
   return (
     <div className="hcontainer">
@@ -64,6 +79,7 @@ export default function BannerSection() {
           pagination={{
             clickable: true,
             el: ".custom-pagination",
+            renderBullet: (index, className) => `<span class="${className}"></span>`,
           }}
           className="banner-swiper"
         >
@@ -75,7 +91,10 @@ export default function BannerSection() {
                   <h3 className="ban-subheading">{item.subtitle}</h3>
                   <p className="dec">{item.desc}</p>
                   <div className="banner-btn">
-                    <div className="banner-btn-in"  onClick={() => navigate("/customizedplan")}>
+                    <div
+                      className="banner-btn-in"
+                      onClick={() => navigate("/customizedplan")}
+                    >
                       <p>{item.button}</p>
                     </div>
                   </div>

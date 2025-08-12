@@ -110,7 +110,7 @@
   width: fit-content;
   border-radius: 20px;
   padding: 4px;
-    pointer-events: auto;
+  pointer-events: auto;
 }
 .banner .banner-btn-in {
   background: linear-gradient(0deg, #a23939 0%, #ff5656);
@@ -121,11 +121,10 @@
   font-size: 18px;
   font-weight: 600;
   letter-spacing: 0.5px;
-  position: relative; 
-  z-index: 15;  
-    pointer-events: auto;
-    cursor: pointer;
-
+  position: relative;
+  z-index: 15;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .banner-swiper .custom-pagination {
@@ -146,9 +145,8 @@
   opacity: 1;
   transition: 0.3s ease;
 }
-.custom-pagination .swiper-pagination-bullet:nth-child(n+4) {
+.custom-pagination .swiper-pagination-bullet:nth-child(n + 4) {
   display: none;
- 
 }
 
 .custom-pagination .swiper-pagination-bullet-active {
@@ -168,19 +166,16 @@
   top: -2.5px;
   left: -2.5px;
 }
-.custom-pagination .swiper-pagination-bullet-active:nth-child(n+4) {
+.custom-pagination .swiper-pagination-bullet-active:nth-child(n + 4) {
   display: none;
 }
-.custom-pagination .swiper-pagination-bullet-active::after:nth-child(n+4) {
-   display: none;
+.custom-pagination .swiper-pagination-bullet-active::after:nth-child(n + 4) {
+  display: none;
 }
 @media (max-width: 1100px) {
   /* hero section */
   .herosection {
     width: 100%;
-  }
-  .banner {
-    height: 450px;
   }
   .banner1,
   .banner2,
@@ -277,13 +272,29 @@
     margin-top: 0px;
   }
   .banner {
-    height: 400px;
+    height: 550px;
   }
-
+  .banner1 {
+    background-image: url("../../assets/Banner/Banner1.webp");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+  .banner2 {
+    background-image: url("../../assets/Banner/VBanner2..jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+  .banner3 {
+    background-image: url("../../assets/Banner/VBanner3..jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
   .banner .linear-black {
     padding: 35px 30px;
-   background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, transparent);
-
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.95) 0%, transparent);
   }
   .banner .banner-txt .ban-heading {
     font-size: 27px;
@@ -297,7 +308,7 @@
     font-size: 13px;
     width: 70%;
     line-height: 20px;
-    color: whites;
+    color: white;
   }
   .banner .banner-btn {
     margin-top: 30px;
@@ -339,7 +350,7 @@
     margin-top: 0px;
   }
   .banner {
-    height: 400px;
+    height: 500px;
   }
   .banner .linear-black {
     padding: 30px 25px;
@@ -398,7 +409,7 @@
     margin-top: 0px;
   }
   .banner {
-    height: 350px;
+    height: 400px;
   }
   .banner .linear-black {
     padding: 20px 20px;

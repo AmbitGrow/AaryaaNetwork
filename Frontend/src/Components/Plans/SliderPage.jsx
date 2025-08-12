@@ -5,7 +5,7 @@ import AaryaaBoxLogo from "../../assets/Slides/AaryaaBoxLogo.webp";
 import "./SliderPage.css";
 
 import logo from "../../assets/AaryaaLogo.png";
-
+import powerott from "../../assets/PowerOTT.png";
 import { useNavigate } from "react-router-dom";
 export default function SliderPage() {
   const [activeCard, setActiveCard] = useState(null);
@@ -266,7 +266,8 @@ export default function SliderPage() {
                     <hr className="card-divider" />
                   </div>
                   <p className="card-includes">Also Includes</p>
-                  <div className="ott-logos">
+                  <div className="ott-logos-all ott-logos-power"></div>
+                  {/* <div className="ott-logos">
                     <div className="ott-icon ott-icon-hotstar"></div>
                     <div className="ott-icon ott-icon-zee5"></div>
                     <div className="ott-icon ott-icon-sunnxt"></div>
@@ -279,7 +280,7 @@ export default function SliderPage() {
                         <p>etc</p>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="tv-ott-channel">
                     <button className="ott-channel-btn power-ott">
                       23+ OTT Apps
@@ -321,7 +322,8 @@ export default function SliderPage() {
                     <hr className="card-divider" />
                   </div>
                   <p className="card-includes">Also Includes</p>
-                  <div className="ott-logos">
+                  <div className="ott-logos-all ott-logos-power-max"></div>
+                  {/* <div className="ott-logos">
                     <div className="ott-icon ott-icon-netflix"></div>
                     <div className="ott-icon ott-icon-amazonprime"></div>
                     <div className="ott-icon ott-icon-hotstar"></div>
@@ -334,7 +336,7 @@ export default function SliderPage() {
                         <p>etc</p>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                   <button className="ott-channel-btn ">28+ OTT Apps</button>
 
                   <div className="aaryaa-logo-bottom">

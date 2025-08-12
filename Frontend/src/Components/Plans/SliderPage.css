@@ -243,7 +243,7 @@
   font-weight: 700;
   letter-spacing: 0.5px;
   color: #651e1e;
-  width: 100%;
+  /* width: 100%; */
 }
 .card-title .card-subheading {
   font-size: 19px;
@@ -327,8 +327,29 @@
   letter-spacing: 1px;
   font-weight: 500;
   cursor: pointer;
-  margin-top: 35px;
+  margin-top: 30px;
 }
+.ott-logos-all {
+  width: 100%;
+  height: 50px;
+  background-image: url("../../assets/PowerOtt.png");
+  margin-top: 25px;
+  background-size: contain;
+  /* background-position: center; */
+  background-repeat: no-repeat;
+}
+.ott-logos-power-max {
+  background-image: url("../../assets/PowermaxOtt.png");
+}
+
+/* .ott-logos-all img
+{
+  width: 100%;
+  height: 100%;
+   object-fit: cover;
+} */
+
+/* 
 .power-ott {
   margin-top: 20px;
 }
@@ -340,7 +361,6 @@
 .ott-icon {
   width: 40px;
   height: 40px;
-  /* background: #651e1e; */
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -412,7 +432,7 @@
   align-items: center;
   justify-content: center;
   margin-left: -20px;
-}
+} */
 .plan-card .aaryaa-logo-bottom {
   display: flex;
   justify-content: center;
@@ -704,8 +724,18 @@
     padding: 15px 0px;
     font-weight: 500;
     cursor: pointer;
-    margin-top: 30px;
+    margin-top: 25px;
   }
+  .ott-logos-all {
+    width: 100%;
+    height: 35px;
+    background-image: url("../../assets/PowerOtt.png");
+    margin-top: 20px;
+    background-size: contain;
+    /* background-position: center; */
+    background-repeat: no-repeat;
+  }
+
   .ott-icon {
     width: 35px;
     height: 35px;
@@ -807,7 +837,10 @@
     font-size: 16px;
   }
   .card-title .card-subheading {
-    font-size: 16px;
+    font-size: 15px;
+  }
+  .card-title .card-subheading span {
+    font-size: 15px;
   }
   .card-content .card-desc {
     font-size: 13px;
@@ -843,6 +876,14 @@
     font-weight: 500;
     cursor: pointer;
     margin-top: 25px;
+  }
+  .ott-logos-all {
+    width: 100%;
+    height: 32px;
+    background-image: url("../../assets/PowerOtt.png");
+    margin-top: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
   }
   .ott-icon {
     width: 30px;
