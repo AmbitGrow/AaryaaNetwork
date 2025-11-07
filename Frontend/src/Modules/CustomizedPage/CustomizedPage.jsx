@@ -21,12 +21,6 @@ import skyplay from "../../assets/skyplay.webp";
 import railwire from "../../assets/RailWire.webp";
 import bsnl from "../../assets/BSNLlogo.webp";
 import airtelxstream from "../../assets/AirtelLogo.webp";
-
-
-
-
-
-
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 const DURATION_OPTIONS = ["Monthly", "Quarterly", "Half-Yearly", "Yearly"];
@@ -55,6 +49,57 @@ const providerLogoMap = {
   BSNL: bsnl,
   "Airtel-Xstream": airtelxstream,
 };
+const SkeletonLoader = () => {
+  return (
+    <div className="skeleton-wrapper">
+      {/* Left Part */}
+      <div className="skeleton-left">
+        <div className="skeleton skeleton-overallbox  s-first">
+          <div className="skeleton-box">
+            <div className=" skeleton-title"></div>
+            <div className="all-btn">
+              <button className="skeleton-btn"></button>
+              <button className="skeleton-btn"></button>
+              <button className="skeleton-btn"></button>
+              <button className="skeleton-btn"></button>
+              <button className="skeleton-btn"></button>
+              <button className="skeleton-btn"></button>
+              <button className="skeleton-btn"></button>
+              <button className="skeleton-btn"></button>
+              <button className="skeleton-btn"></button>
+              <button className="skeleton-btn"></button>
+              <button className="skeleton-btn"></button>
+              <button className="skeleton-btn"></button>
+            </div>
+          </div>
+          <div className="skeleton-box">
+            <div className=" skeleton-title skeleton-btn"></div>
+            <div className="all-btn">
+              <button className="skeleton-btn"></button>
+            </div>
+          </div>
+        </div>
+        <div className="skeleton skeleton-overallbox  s-second">
+          <div className="skeleton-box">
+            <div className=" skeleton-title skeleton-btn"></div>
+            <div className="all-btn">
+              <button className="skeleton-btn"></button>
+              <button className="skeleton-btn"></button>
+              <button className="skeleton-btn"></button>
+              <button className="skeleton-btn"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Part */}
+      <div className="skeleton-right">
+        <div className="skeleton skeleton-price-box"></div>
+        <div className="skeleton skeleton-plan-details"></div>
+      </div>
+    </div>
+  );
+};
 
 const CustomizedPage = () => {
   const plansRef = useRef(null);
@@ -63,6 +108,7 @@ const CustomizedPage = () => {
   const [durationOptions] = useState(DURATION_OPTIONS);
   const [providerOptions, setProviderOptions] = useState([]);
   const [planType, setPlanType] = useState("internet");
+  const [loading, setLoading] = useState(true);
 
   const scrollToPlans = () => {
     plansRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -82,11 +128,8 @@ const CustomizedPage = () => {
 
   // Step 1: fetch all plans for the selected planType
   useEffect(() => {
-    // Always clear OTT/TV sections on planType change
-    setSelectedOttTier("");
-    setSelectedTvChannel("");
-
     const fetchPlans = async () => {
+      setLoading(true);
       try {
         const res = await API.get("/api/plans/filter", {
           params: { planType },
@@ -94,37 +137,22 @@ const CustomizedPage = () => {
         const data = res.data;
         setPlans(data);
 
-        // Get unique speed options
+        // Rest of your existing logic...
         const uniqueSpeeds = [...new Set(data.map((p) => p.speed))];
         setSpeedOptions(uniqueSpeeds);
-
-        // Default selections
         const defaultSpeed = uniqueSpeeds[0] || "";
         setSelectedSpeed(defaultSpeed);
 
-        // Providers for default speed
         const providersForSpeed = data.filter((p) => p.speed === defaultSpeed);
         const uniqueProviders = [
           ...new Set(providersForSpeed.map((p) => p.provider)),
         ];
         setProviderOptions(uniqueProviders);
         setSelectedProvider(uniqueProviders[0] || "");
-
-        setSelectedDuration(DURATION_OPTIONS[0]);
-
-        // OTT and TV options: get all available for this plan type, speed, provider
-        // (initially undefined; will set below in useEffect as speed/provider changes)
-        // eslint-disable-next-line no-unused-vars
       } catch (err) {
         setPlans([]);
-        setSpeedOptions([]);
-        setProviderOptions([]);
-        setSelectedSpeed("");
-        setSelectedProvider("");
-        setSelectedDuration(DURATION_OPTIONS[0]);
-        setCurrentPlan(null);
-        setSelectedOttTier("");
-        setSelectedTvChannel("");
+      } finally {
+        setLoading(false);
       }
     };
     fetchPlans();
@@ -394,482 +422,498 @@ const CustomizedPage = () => {
               entertained, united, and closer than ever
             </p>
           </div>
+
           <div className="total-container">
-            <div className="left-part">
-              <div className="left-header">
-                <div className="title-tag get-plan-tag">
-                  <div className="circle-dot"></div>
-                  <p>Get Customized Plans</p>
-                </div>
-                <div className="plan-type-selection">
-                  {PLAN_TYPES.map((pt) => (
-                    <label key={pt.value}>
-                      <input
-                        type="radio"
-                        className="rbutton"
-                        name="planType"
-                        value={pt.value}
-                        checked={planType === pt.value}
-                        onChange={(e) => setPlanType(e.target.value)}
-                      />
-                      {pt.label}
-                    </label>
-                  ))}
-                </div>
+            <div className="left-header">
+              <div className="title-tag get-plan-tag">
+                <div className="circle-dot"></div>
+                <p>Get Customized Plans</p>
               </div>
-              <div className="plan-filters-1">
-                {/* Speed */}
-                <div className="filter-group">
-                  <label>Speed:</label>
-                  <div className="option-row-group-1">
-                    {speedOptions.map((speed) => (
-                      <button
-                        key={speed}
-                        className={`option-button ${
-                          selectedSpeed === speed ? "active" : ""
-                        }`}
-                        onClick={() => setSelectedSpeed(speed)}
-                        type="button"
-                      >
-                        {speed}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                {/* Provider */}
-                <div className="filter-group">
-                  <label>Provider:</label>
-                  <div className="option-row-group-2">
-                    {providerOptions.slice(0, 5).map((provider) => (
-                      <button
-                        key={provider}
-                        className={`option-button ${
-                          selectedProvider === provider ? "active" : ""
-                        }`}
-                        onClick={() => setSelectedProvider(provider)}
-                        type="button"
-                      >
-                        <div className="circle">
-                          {providerLogoMap[provider] && (
-                            <img
-                              src={providerLogoMap[provider]}
-                              alt={provider}
-                              style={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "contain",
-                              }}
-                            />
-                          )}
+              <div className="plan-type-selection">
+                {PLAN_TYPES.map((pt) => (
+                  <label key={pt.value}>
+                    <input
+                      type="radio"
+                      className="rbutton"
+                      name="planType"
+                      value={pt.value}
+                      checked={planType === pt.value}
+                      onChange={(e) => setPlanType(e.target.value)}
+                    />
+                    {pt.label}
+                  </label>
+                ))}
+              </div>
+            </div>
+            <div
+              className={`fade-section ${
+                plans.length === 0 ? "loading" : "loaded"
+              }`}
+            >
+              {plans.length === 0 ? (
+                <SkeletonLoader />
+              ) : (
+                <div className="total-subcontainer">
+                  <div className="left-part">
+                    <div className="plan-filters-1">
+                      {/* Speed */}
+                      <div className="filter-group">
+                        <label>Speed:</label>
+                        <div className="option-row-group-1">
+                          {speedOptions.map((speed) => (
+                            <button
+                              key={speed}
+                              className={`option-button ${
+                                selectedSpeed === speed ? "active" : ""
+                              }`}
+                              onClick={() => setSelectedSpeed(speed)}
+                              type="button"
+                            >
+                              {speed}
+                            </button>
+                          ))}
                         </div>
-                        {provider}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="plan-filters-2">
-                {/* Duration */}
-                <div className="filter-group">
-                  <label>Duration:</label>
-                  <div className="option-row-group-3">
-                    {durationOptions.map((duration) => {
-                      const isAvailable = plans.some(
-                        (p) =>
-                          p.speed === selectedSpeed &&
-                          p.provider === selectedProvider &&
-                          p.duration === duration
-                      );
-                      return (
-                        <button
-                          key={duration}
-                          className={`option-button ${
-                            selectedDuration === duration ? "active" : ""
-                          }`}
-                          onClick={() =>
-                            isAvailable && setSelectedDuration(duration)
-                          }
-                          type="button"
-                          disabled={!isAvailable}
-                        >
-                          {duration}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
-              {planType.includes("tv") && tvChannelOptions.length > 0 && (
-                <div className="plan-filters-3">
-                  {/* TV Section: Only show if planType includes "tv" */}
-                  <div className="filter-group">
-                    <label>TV Channel:</label>
-                    <div className="option-row-group-4">
-                      {tvChannelOptions.map((tv) => (
-                        <button
-                          key={tv}
-                          className={`option-button ${
-                            selectedTvChannel === tv ? "active" : ""
-                          }`}
-                          onClick={() => setSelectedTvChannel(tv)}
-                          type="button"
-                        >
-                          {tv}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-              {planType.includes("ott") && ottTierOptions.length > 0 && (
-                <div className="plan-filters-4">
-                  {/* OTT Section: Only show if planType includes "ott" */}
-                  <div className="filter-group">
-                    <label>OTT Tier:</label>
-                    <div className="option-row-group-5">
-                      {ottTierOptions.map((tier) => (
-                        <button
-                          key={tier}
-                          className={`option-button ${
-                            selectedOttTier === tier ? "active" : ""
-                          }`}
-                          onClick={() => setSelectedOttTier(tier)}
-                          type="button"
-                        >
-                          {tier}
-                        </button>
-                      ))}
-                    </div>
-
-                    {currentPlan ? (
-                      <div className="ott-logo-container">
-                        {Array.isArray(currentPlan.ottList) &&
-                        currentPlan.ottList.length > 0 ? (
-                          currentPlan.ottList.map((ott, index) => (
-                            <img
-                              key={index}
-                              src={ottLogoMap[ott]}
-                              alt={ott}
-                              title={ott}
-                              className="ott-logo"
-                            />
-                          ))
-                        ) : (
-                          <span
-                            className="badge badge-none"
-                            style={{ fontWeight: 500 }}
-                          >
-                            —
-                          </span>
-                        )}
                       </div>
-                    ) : null}
+                      {/* Provider */}
+                      <div className="filter-group">
+                        <label>Provider:</label>
+                        <div className="option-row-group-2">
+                          {providerOptions.slice(0, 5).map((provider) => (
+                            <button
+                              key={provider}
+                              className={`option-button ${
+                                selectedProvider === provider ? "active" : ""
+                              }`}
+                              onClick={() => setSelectedProvider(provider)}
+                              type="button"
+                            >
+                              <div className="circle">
+                                {providerLogoMap[provider] && (
+                                  <img
+                                    src={providerLogoMap[provider]}
+                                    alt={provider}
+                                    style={{
+                                      width: "100%",
+                                      height: "100%",
+                                      objectFit: "contain",
+                                    }}
+                                  />
+                                )}
+                              </div>
+                              {provider}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="plan-filters-2">
+                      {/* Duration */}
+                      <div className="filter-group">
+                        <label>Duration:</label>
+                        <div className="option-row-group-3">
+                          {durationOptions.map((duration) => {
+                            const isAvailable = plans.some(
+                              (p) =>
+                                p.speed === selectedSpeed &&
+                                p.provider === selectedProvider &&
+                                p.duration === duration
+                            );
+                            return (
+                              <button
+                                key={duration}
+                                className={`option-button ${
+                                  selectedDuration === duration ? "active" : ""
+                                }`}
+                                onClick={() =>
+                                  isAvailable && setSelectedDuration(duration)
+                                }
+                                type="button"
+                                disabled={!isAvailable}
+                              >
+                                {duration}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                    {planType.includes("tv") && tvChannelOptions.length > 0 && (
+                      <div className="plan-filters-3">
+                        {/* TV Section: Only show if planType includes "tv" */}
+                        <div className="filter-group">
+                          <label>TV Channel:</label>
+                          <div className="option-row-group-4">
+                            {tvChannelOptions.map((tv) => (
+                              <button
+                                key={tv}
+                                className={`option-button ${
+                                  selectedTvChannel === tv ? "active" : ""
+                                }`}
+                                onClick={() => setSelectedTvChannel(tv)}
+                                type="button"
+                              >
+                                {tv}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {planType.includes("ott") && ottTierOptions.length > 0 && (
+                      <div className="plan-filters-4">
+                        {/* OTT Section: Only show if planType includes "ott" */}
+                        <div className="filter-group">
+                          <label>OTT Tier:</label>
+                          <div className="option-row-group-5">
+                            {ottTierOptions.map((tier) => (
+                              <button
+                                key={tier}
+                                className={`option-button ${
+                                  selectedOttTier === tier ? "active" : ""
+                                }`}
+                                onClick={() => setSelectedOttTier(tier)}
+                                type="button"
+                              >
+                                {tier}
+                              </button>
+                            ))}
+                          </div>
 
-                    {/* ott list */}
-                    {/* {currentPlan ? (
-                      <>
-                        {" "}
-                        <div className="span">
-                          <span
-                            title={
-                              Array.isArray(currentPlan.ottList)
-                                ? currentPlan.ottList.join(", ")
-                                : ""
-                            }
-                            style={{ fontWeight: 500 }}
-                          >
-                            {currentPlan.ottList &&
-                            currentPlan.ottList.length > 0 ? (
-                              <>{currentPlan.ottList.slice(0).join(", ")}</>
-                            ) : (
+                          {currentPlan ? (
+                            <div className="ott-logo-container">
+                              {Array.isArray(currentPlan.ottList) &&
+                              currentPlan.ottList.length > 0 ? (
+                                currentPlan.ottList.map((ott, index) => (
+                                  <img
+                                    key={index}
+                                    src={ottLogoMap[ott]}
+                                    alt={ott}
+                                    title={ott}
+                                    className="ott-logo"
+                                  />
+                                ))
+                              ) : (
+                                <span
+                                  className="badge badge-none"
+                                  style={{ fontWeight: 500 }}
+                                >
+                                  —
+                                </span>
+                              )}
+                            </div>
+                          ) : null}
+
+                          {/* ott list */}
+                          {/* {currentPlan ? (
+                          <>
+                            {" "}
+                            <div className="span">
                               <span
-                                className="badge badge-none"
+                                title={
+                                  Array.isArray(currentPlan.ottList)
+                                    ? currentPlan.ottList.join(", ")
+                                    : ""
+                                }
                                 style={{ fontWeight: 500 }}
                               >
-                                —
+                                {currentPlan.ottList &&
+                                currentPlan.ottList.length > 0 ? (
+                                  <>{currentPlan.ottList.slice(0).join(", ")}</>
+                                ) : (
+                                  <span
+                                    className="badge badge-none"
+                                    style={{ fontWeight: 500 }}
+                                  >
+                                    —
+                                  </span>
+                                )}
                               </span>
+                            </div>
+                          </>
+                        ) : (
+                          <></>
+                        )} */}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  <div className="right-part">
+                    {currentPlan ? (
+                      <>
+                        <div className="plan-price-box">
+                          <div className="plan-price-label">
+                            <p>PRICE</p>
+                            <span>
+                              {currentPlan.firstTimeTotal
+                                ? `₹${currentPlan.firstTimeTotal}`
+                                : `₹${currentPlan.renewalTotal}`}
+                            </span>
+                          </div>
+                          <button
+                            className="get-plan-btn"
+                            onClick={() =>
+                              navigate("/contact", {
+                                state: {
+                                  selectedPlan: currentPlan,
+                                  scrollTo: "contact-form-section",
+                                },
+                              })
+                            }
+                          >
+                            Get Plan
+                          </button>
+                          <a
+                            onClick={handleDownloadPDF}
+                            style={{
+                              cursor: "pointer",
+                              color: "blue",
+                              textAlign: "center",
+                              fontSize: "12px",
+                            }}
+                          >
+                            Click to Download your plan
+                          </a>
+                        </div>
+                        <div className="plan-details-card">
+                          {/* Card Header */}
+                          <div className="plan-details-header">
+                            <span style={{ fontWeight: 500 }}>
+                              Plan Details
+                            </span>
+                            <span className="plan-details-icon">
+                              <FaArrowRightLong className="arrow-icon" />
+                            </span>
+                          </div>
+
+                          <div className="plan-details-list">
+                            {/* Section: Summary */}
+                            {/* <div className="plan-section">Summary</div> */}
+                            <div className="plan-details-row">
+                              <span>Speed</span>
+                              <span style={{ fontWeight: 500 }}>
+                                {currentPlan.speed}
+                              </span>
+                            </div>
+                            <div className="plan-details-row">
+                              <span>Duration</span>
+                              <span style={{ fontWeight: 500 }}>
+                                {currentPlan.duration}
+                              </span>
+                            </div>
+                            <div className="plan-details-row">
+                              <span>Provider</span>
+                              <span style={{ fontWeight: 500 }}>
+                                {currentPlan.provider}
+                              </span>
+                            </div>
+
+                            {/* Section: Inclusions/Add-ons */}
+                            {/* <div className="plan-section" style={{ marginTop: 14 }}>Add-ons</div> */}
+                            <div className="plan-details-row">
+                              <span>OTT Tier</span>
+                              <span style={{ fontWeight: 500 }}>
+                                {currentPlan.ottTier &&
+                                currentPlan.ottTier !== "None" ? (
+                                  <>
+                                    {currentPlan.ottTier}
+                                    {/* {currentPlan.ottCharge === 0
+                                            ? <span ></span>
+                                            : <span className="badge badge-paid">+₹{currentPlan.ottCharge}</span>
+                                          } */}
+                                  </>
+                                ) : (
+                                  <span
+                                    className="badge badge-none"
+                                    style={{ fontWeight: 500 }}
+                                  >
+                                    None
+                                  </span>
+                                )}
+                              </span>
+                            </div>
+                            <div className="plan-details-row">
+                              <span>OTT List</span>
+                              <span
+                                title={
+                                  Array.isArray(currentPlan.ottList)
+                                    ? currentPlan.ottList.join(", ")
+                                    : ""
+                                }
+                                style={{ fontWeight: 500 }}
+                              >
+                                {currentPlan.ottList &&
+                                currentPlan.ottList.length > 0 ? (
+                                  <>
+                                    {currentPlan.ottList.slice(0, 2).join(", ")}
+                                    {currentPlan.ottList.length > 2
+                                      ? ", ..."
+                                      : ""}
+                                  </>
+                                ) : (
+                                  <span
+                                    className="badge badge-none"
+                                    style={{ fontWeight: 500 }}
+                                  >
+                                    —
+                                  </span>
+                                )}
+                              </span>
+                            </div>
+                            <div className="plan-details-row">
+                              <span>TV Channels</span>
+                              <span style={{ fontWeight: 500 }}>
+                                {currentPlan.tvChannels &&
+                                currentPlan.tvChannels !== "None" ? (
+                                  <>
+                                    {currentPlan.tvChannels}
+                                    {/* {currentPlan.tvCharge === 0
+                                            ? <span></span>
+                                            : <span className="badge badge-paid">+₹{currentPlan.tvCharge}</span>
+                                          } */}
+                                  </>
+                                ) : (
+                                  <span
+                                    className="badge badge-none"
+                                    style={{ fontWeight: 500 }}
+                                  >
+                                    None
+                                  </span>
+                                )}
+                              </span>
+                            </div>
+                            <div className="plan-details-row">
+                              <span>Router</span>
+                              <span style={{ fontWeight: 500 }}>
+                                {currentPlan.router &&
+                                currentPlan.router !== "None" ? (
+                                  <span className="badge badge-included">
+                                    {currentPlan.router}
+                                  </span>
+                                ) : (
+                                  <span
+                                    className="badge badge-none"
+                                    style={{ fontWeight: 500 }}
+                                  >
+                                    None
+                                  </span>
+                                )}
+                              </span>
+                            </div>
+                            <div className="plan-details-row">
+                              <span>Android Box</span>
+                              <span style={{ fontWeight: 500 }}>
+                                {currentPlan.androidBox ? (
+                                  <span className="badge badge-included">
+                                    Included
+                                  </span>
+                                ) : (
+                                  <span
+                                    className="badge badge-none"
+                                    style={{ fontWeight: 500 }}
+                                  >
+                                    No
+                                  </span>
+                                )}
+                              </span>
+                            </div>
+
+                            {/* Section: Price Breakdown */}
+                            {/* <div className="plan-section" style={{ marginTop: 14 }}>Price Breakdown</div> */}
+                            <div className="plan-details-row">
+                              <span>Base Price</span>
+                              {renderBasePriceRow(
+                                currentPlan.basePrice,
+                                currentPlan.duration
+                              )}
+                            </div>
+                            {currentPlan.discountAmount > 0 && (
+                              <div className="plan-details-row">
+                                <span>Discount</span>
+                                <span
+                                  className="discount-value"
+                                  style={{ fontWeight: 500 }}
+                                >
+                                  -₹{currentPlan.discountAmount.toFixed(2)}
+                                </span>
+                              </div>
                             )}
-                          </span>
+                            {currentPlan.ottCharge >= 0 &&
+                              currentPlan.ottTier !== "None" && (
+                                <div className="plan-details-row">
+                                  <span>OTT Addon</span>
+                                  <span style={{ fontWeight: 500 }}>
+                                    {currentPlan.ottCharge === 0 &&
+                                    currentPlan.ottTier !== "None" ? (
+                                      <span className="badge badge-included">
+                                        Free
+                                      </span>
+                                    ) : (
+                                      <span
+                                        className="badge badge-paid"
+                                        style={{ fontWeight: 500 }}
+                                      >
+                                        +₹{currentPlan.ottCharge}
+                                      </span>
+                                    )}
+                                  </span>
+                                </div>
+                              )}
+                            {currentPlan.tvCharge >= 0 &&
+                              currentPlan.tvChannels !== "None" && (
+                                <div className="plan-details-row">
+                                  <span>TV Addon</span>
+                                  <span style={{ fontWeight: 500 }}>
+                                    {currentPlan.tvCharge === 0 &&
+                                    currentPlan.tvChannels !== "None" ? (
+                                      <span className="badge badge-included">
+                                        Free
+                                      </span>
+                                    ) : (
+                                      <span
+                                        className="badge badge-paid"
+                                        style={{ fontWeight: 500 }}
+                                      >
+                                        +₹{currentPlan.tvCharge}
+                                      </span>
+                                    )}
+                                  </span>
+                                </div>
+                              )}
+                            {currentPlan.installationFee > 0 && (
+                              <div className="plan-details-row">
+                                <span>Installation Fee</span>
+                                <span style={{ fontWeight: 500 }}>
+                                  +₹{currentPlan.installationFee}
+                                </span>
+                              </div>
+                            )}
+                            {currentPlan.advancePayment > 0 && (
+                              <div className="plan-details-row">
+                                <span>Advance Payment</span>
+                                <span style={{ fontWeight: 500 }}>
+                                  +₹{currentPlan.advancePayment}
+                                </span>
+                              </div>
+                            )}
+                            <div className="plan-details-row">
+                              <span>GST</span>
+                              <span style={{ fontWeight: 500 }}>
+                                +₹{currentPlan.gst}
+                              </span>
+                            </div>
+                          </div>
                         </div>
                       </>
                     ) : (
-                      <></>
-                    )} */}
+                      // <div className="no-plan-message">Loading...</div>
+                      <div className="skeleton-right-loading">
+                        <div className="skeleton skeleton-price-box"></div>
+                        <div className="skeleton skeleton-plan-details"></div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
-            </div>
-
-            {/* Plan Details */}
-            <div className="right-part">
-              {currentPlan ? (
-                <>
-                  <div className="plan-price-box">
-                    <div className="plan-price-label">
-                      <p>PRICE</p>
-                      <span>
-                        {currentPlan.firstTimeTotal
-                          ? `₹${currentPlan.firstTimeTotal}`
-                          : `₹${currentPlan.renewalTotal}`}
-                      </span>
-                    </div>
-                    <button
-                      className="get-plan-btn"
-                      onClick={() =>
-                        navigate("/contact", {
-                          state: {
-                            selectedPlan: currentPlan,
-                            scrollTo: "contact-form-section",
-                          },
-                        })
-                      }
-                    >
-                      Get Plan
-                    </button>
-                    <a
-                      onClick={handleDownloadPDF}
-                      style={{
-                        cursor: "pointer",
-                        color: "blue",
-                        textAlign: "center",
-                        fontSize: "12px",
-                      }}
-                    >
-                      Click to Download your plan
-                    </a>
-                  </div>
-                  <div className="plan-details-card">
-                    {/* Card Header */}
-                    <div className="plan-details-header">
-                      <span style={{ fontWeight: 500 }}>Plan Details</span>
-                      <span className="plan-details-icon">
-                        <FaArrowRightLong className="arrow-icon" />
-                      </span>
-                    </div>
-
-                    <div className="plan-details-list">
-                      {/* Section: Summary */}
-                      {/* <div className="plan-section">Summary</div> */}
-                      <div className="plan-details-row">
-                        <span>Speed</span>
-                        <span style={{ fontWeight: 500 }}>
-                          {currentPlan.speed}
-                        </span>
-                      </div>
-                      <div className="plan-details-row">
-                        <span>Duration</span>
-                        <span style={{ fontWeight: 500 }}>
-                          {currentPlan.duration}
-                        </span>
-                      </div>
-                      <div className="plan-details-row">
-                        <span>Provider</span>
-                        <span style={{ fontWeight: 500 }}>
-                          {currentPlan.provider}
-                        </span>
-                      </div>
-
-                      {/* Section: Inclusions/Add-ons */}
-                      {/* <div className="plan-section" style={{ marginTop: 14 }}>Add-ons</div> */}
-                      <div className="plan-details-row">
-                        <span>OTT Tier</span>
-                        <span style={{ fontWeight: 500 }}>
-                          {currentPlan.ottTier &&
-                          currentPlan.ottTier !== "None" ? (
-                            <>
-                              {currentPlan.ottTier}
-                              {/* {currentPlan.ottCharge === 0
-                                        ? <span ></span>
-                                        : <span className="badge badge-paid">+₹{currentPlan.ottCharge}</span>
-                                      } */}
-                            </>
-                          ) : (
-                            <span
-                              className="badge badge-none"
-                              style={{ fontWeight: 500 }}
-                            >
-                              None
-                            </span>
-                          )}
-                        </span>
-                      </div>
-                      <div className="plan-details-row">
-                        <span>OTT List</span>
-                        <span
-                          title={
-                            Array.isArray(currentPlan.ottList)
-                              ? currentPlan.ottList.join(", ")
-                              : ""
-                          }
-                          style={{ fontWeight: 500 }}
-                        >
-                          {currentPlan.ottList &&
-                          currentPlan.ottList.length > 0 ? (
-                            <>
-                              {currentPlan.ottList.slice(0, 2).join(", ")}
-                              {currentPlan.ottList.length > 2 ? ", ..." : ""}
-                            </>
-                          ) : (
-                            <span
-                              className="badge badge-none"
-                              style={{ fontWeight: 500 }}
-                            >
-                              —
-                            </span>
-                          )}
-                        </span>
-                      </div>
-                      <div className="plan-details-row">
-                        <span>TV Channels</span>
-                        <span style={{ fontWeight: 500 }}>
-                          {currentPlan.tvChannels &&
-                          currentPlan.tvChannels !== "None" ? (
-                            <>
-                              {currentPlan.tvChannels}
-                              {/* {currentPlan.tvCharge === 0
-                                        ? <span></span>
-                                        : <span className="badge badge-paid">+₹{currentPlan.tvCharge}</span>
-                                      } */}
-                            </>
-                          ) : (
-                            <span
-                              className="badge badge-none"
-                              style={{ fontWeight: 500 }}
-                            >
-                              None
-                            </span>
-                          )}
-                        </span>
-                      </div>
-                      <div className="plan-details-row">
-                        <span>Router</span>
-                        <span style={{ fontWeight: 500 }}>
-                          {currentPlan.router &&
-                          currentPlan.router !== "None" ? (
-                            <span className="badge badge-included">
-                              {currentPlan.router}
-                            </span>
-                          ) : (
-                            <span
-                              className="badge badge-none"
-                              style={{ fontWeight: 500 }}
-                            >
-                              None
-                            </span>
-                          )}
-                        </span>
-                      </div>
-                      <div className="plan-details-row">
-                        <span>Android Box</span>
-                        <span style={{ fontWeight: 500 }}>
-                          {currentPlan.androidBox ? (
-                            <span className="badge badge-included">
-                              Included
-                            </span>
-                          ) : (
-                            <span
-                              className="badge badge-none"
-                              style={{ fontWeight: 500 }}
-                            >
-                              No
-                            </span>
-                          )}
-                        </span>
-                      </div>
-
-                      {/* Section: Price Breakdown */}
-                      {/* <div className="plan-section" style={{ marginTop: 14 }}>Price Breakdown</div> */}
-                      <div className="plan-details-row">
-                        <span>Base Price</span>
-                        {renderBasePriceRow(
-                          currentPlan.basePrice,
-                          currentPlan.duration
-                        )}
-                      </div>
-                      {currentPlan.discountAmount > 0 && (
-                        <div className="plan-details-row">
-                          <span>Discount</span>
-                          <span
-                            className="discount-value"
-                            style={{ fontWeight: 500 }}
-                          >
-                            -₹{currentPlan.discountAmount.toFixed(2)}
-                          </span>
-                        </div>
-                      )}
-                      {currentPlan.ottCharge >= 0 &&
-                        currentPlan.ottTier !== "None" && (
-                          <div className="plan-details-row">
-                            <span>OTT Addon</span>
-                            <span style={{ fontWeight: 500 }}>
-                              {currentPlan.ottCharge === 0 &&
-                              currentPlan.ottTier !== "None" ? (
-                                <span className="badge badge-included">
-                                  Free
-                                </span>
-                              ) : (
-                                <span
-                                  className="badge badge-paid"
-                                  style={{ fontWeight: 500 }}
-                                >
-                                  +₹{currentPlan.ottCharge}
-                                </span>
-                              )}
-                            </span>
-                          </div>
-                        )}
-                      {currentPlan.tvCharge >= 0 &&
-                        currentPlan.tvChannels !== "None" && (
-                          <div className="plan-details-row">
-                            <span>TV Addon</span>
-                            <span style={{ fontWeight: 500 }}>
-                              {currentPlan.tvCharge === 0 &&
-                              currentPlan.tvChannels !== "None" ? (
-                                <span className="badge badge-included">
-                                  Free
-                                </span>
-                              ) : (
-                                <span
-                                  className="badge badge-paid"
-                                  style={{ fontWeight: 500 }}
-                                >
-                                  +₹{currentPlan.tvCharge}
-                                </span>
-                              )}
-                            </span>
-                          </div>
-                        )}
-                      {currentPlan.installationFee > 0 && (
-                        <div className="plan-details-row">
-                          <span>Installation Fee</span>
-                          <span style={{ fontWeight: 500 }}>
-                            +₹{currentPlan.installationFee}
-                          </span>
-                        </div>
-                      )}
-                      {currentPlan.advancePayment > 0 && (
-                        <div className="plan-details-row">
-                          <span>Advance Payment</span>
-                          <span style={{ fontWeight: 500 }}>
-                            +₹{currentPlan.advancePayment}
-                          </span>
-                        </div>
-                      )}
-                      <div className="plan-details-row">
-                        <span>GST</span>
-                        <span style={{ fontWeight: 500 }}>
-                          +₹{currentPlan.gst}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <div className="no-plan-message">Loading...</div>
-              )}
-              {/* <div className="right-part-photo">
-                    
-                </div> */}
             </div>
           </div>
         </div>
