@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from "react";
-import axios from "axios";
+// import axios from "axios";
 import API from "../../Admin/Api/Api";
 import { useNavigate } from "react-router-dom";
 import "./CustomizedPage.css";
@@ -306,45 +306,175 @@ const CustomizedPage = () => {
 
     const doc = new jsPDF();
 
-    doc.setFontSize(18);
-    doc.text("Aaryaa Network Plan Detail", 14, 10);
+    // --- Header ---
+    doc.setFontSize(20);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(41, 128, 185);
+    doc.text("INVOICE", 14, 20);
 
+    // Company Info
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont("helvetica", "bold");
+    doc.text("AARYAA NETWORK", 14, 32);
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text("Your Trusted Internet Service Provider", 14, 38);
+    doc.text("Connect every smile at home with joyful fibre experience", 14, 43);
+    doc.text("Email: aaryaanetwork@gmail.com | Phone: +91-9962201081 , +91-7708067932", 14, 48);
+
+    // --- Customer Info & Invoice Details ---
+    const rightStart = 120;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    // doc.text("Customer Name: [To be filled]", rightStart, 38);
+    // doc.text("Address: [To be filled]", rightStart, 43);
+    doc.text(`Date: ${new Date().toLocaleDateString('en-IN')}`, rightStart, 38);
+    doc.text(`Invoice #: INV-${Date.now().toString().slice(-6)}`, rightStart, 43);
+
+    // --- Plan Details Table ---
     autoTable(doc, {
-      startY: 30,
-      head: [["Field", "Value"]],
+      startY: 65,
+      head: [["Plan Details", "Specifications"]],
       body: [
-        ["Speed", currentPlan.speed],
-        ["Duration", currentPlan.duration],
-        ["Provider", currentPlan.provider],
+        // Plan Overview
+        ["Internet Speed", currentPlan.speed],
+        ["Plan Duration", currentPlan.duration],
+        ["Service Provider", currentPlan.provider],
+        
+        // Services & Features
         ["OTT Tier", currentPlan.ottTier],
-        ["OTT List", currentPlan.ottList.join(", ")],
+        ["OTT Platforms", currentPlan.ottList.join(", ")],
         ["TV Channels", currentPlan.tvChannels],
-        ["Router", currentPlan.router],
-        ["Android Box", currentPlan.androidBox],
-        ["Base Price", currentPlan.basePrice],
-        ["OTT Charge", currentPlan.ottCharge],
-        ["TV Charge", currentPlan.tvCharge],
-        ["Renewal Total", currentPlan.renewalTotal],
-        ["GST", currentPlan.gst],
-        ["Advance Payment", currentPlan.advancePayment],
-        ["Discount", currentPlan.discountAmount],
-        ["First Time Total", currentPlan.firstTimeTotal],
-        ["Installation Fee", currentPlan.installationFee],
-        [
-          "Total ",
-          (
-            currentPlan.renewalTotal +
-            currentPlan.installationFee +
-            currentPlan.advancePayment +
-            currentPlan.gst +
-            currentPlan.firstTimeTotal -
-            currentPlan.discountAmount
-          ).toFixed(2),
-        ],
+        ["Router Included", currentPlan.router],
+        ["Android Box", currentPlan.androidBox ? "Included" : "Not Included"],
       ],
+      styles: { 
+        fontSize: 10, 
+        cellPadding: 4,
+        lineColor: [220, 220, 220],
+        lineWidth: 0.1
+      },
+      headStyles: { 
+        fillColor: [41, 128, 185], 
+        textColor: 255, 
+        fontStyle: 'bold',
+        halign: "center" 
+      },
+      columnStyles: {
+        0: { halign: "left", fontStyle: "bold", cellWidth: 60 },
+        1: { halign: "left", cellWidth: 120 },
+      },
+      alternateRowStyles: {
+        fillColor: [245, 245, 245]
+      }
     });
 
-    doc.save(`${currentPlan.speed.replace(/\s+/g, "_")}_Plan.pdf`);
+    // --- Pricing Breakdown Table ---
+    const finalY = doc.lastAutoTable.finalY + 10;
+    
+    autoTable(doc, {
+      startY: finalY,
+      head: [["Description", "Amount"]],
+      body: [
+        ["Base Price", currentPlan.basePrice],
+        ["OTT Charges", currentPlan.ottCharge],
+        ["TV Charges", currentPlan.tvCharge],
+        ["GST", currentPlan.gst],
+        ["Renewal Total", currentPlan.renewalTotal],
+        ["Installation Fee", currentPlan.installationFee],
+        ["Advance Payment", currentPlan.advancePayment],
+        ["First Time Total", currentPlan.firstTimeTotal],
+        // ["Sub Total", `₹${(currentPlan.basePrice + currentPlan.ottCharge + currentPlan.tvCharge + currentPlan.installationFee + currentPlan.advancePayment).toFixed(2)}`],
+        ["Discount Applied", currentPlan.discountAmount],
+      ],
+      styles: { 
+        fontSize: 10, 
+        cellPadding: 4,
+        lineColor: [220, 220, 220],
+        lineWidth: 0.1
+      },
+      headStyles: { 
+        fillColor: [52, 73, 94], 
+        textColor: 255, 
+        fontStyle: 'bold',
+        halign: "center" 
+      },
+      columnStyles: {
+        0: { halign: "left", fontStyle: "normal", cellWidth: 120 },
+        1: { halign: "right", fontStyle: "normal", cellWidth: 60 },
+      },
+      alternateRowStyles: {
+        fillColor: [248, 248, 248]
+      }
+    });
+
+    // --- Grand Total Box ---
+    const grandTotalY = doc.lastAutoTable.finalY + 2;
+    
+    autoTable(doc, {
+      startY: grandTotalY,
+      body: [
+        ["GRAND TOTAL", currentPlan.firstTimeTotal ? currentPlan.firstTimeTotal : currentPlan.renewalTotal]
+      ],
+      styles: { 
+  fontSize: 11, 
+  cellPadding: 5,
+  lineColor: [200, 200, 200],   // softer gray
+  lineWidth: 0.2,
+  textColor: [44, 62, 80],      // dark slate text
+},
+
+headStyles: { 
+  fillColor: [41, 128, 185],    // blue header
+  textColor: 255, 
+  fontStyle: 'bold',
+  halign: "center",
+  valign: "middle",
+  fontSize: 12,
+},
+
+bodyStyles: {
+  fillColor: [245, 247, 250],   // light background for rows
+},
+
+alternateRowStyles: {
+  fillColor: [255, 255, 255],   // alternate white rows
+},
+
+columnStyles: {
+  0: { halign: "left", fontStyle: "bold", cellWidth: 120 },
+  1: { halign: "right", fontStyle: "normal", cellWidth: 60 },
+},
+
+footStyles: {
+  fillColor: [39, 174, 96],     // green highlight for total
+  textColor: 255,
+  fontStyle: "bold",
+  halign: "right"
+}
+
+    });
+
+    // --- Footer ---
+    const footerY = doc.internal.pageSize.height - 30;
+    doc.setDrawColor(220, 220, 220);
+    doc.line(14, footerY - 5, 196, footerY - 5);
+    
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+    doc.text("Terms & Conditions:", 14, footerY);
+    doc.text("• This is a system generated invoice", 14, footerY + 5);
+    doc.text("• All prices are inclusive of applicable taxes", 14, footerY + 10);
+    doc.text("• For support and queries, contact: aaryaanetwork@gmail.com", 14, footerY + 15);
+    
+    doc.setTextColor(41, 128, 185);
+    doc.text("Thank you for choosing Aaryaa Network!", 14, footerY + 20);
+
+    // Save with descriptive filename
+    const filename = `Aaryaa_${currentPlan.speed.replace(/\s+/g, "_")}_${currentPlan.duration}_Plan_Invoice.pdf`;
+    doc.save(filename);
   };
 
   function getMonthlyBasePrice(plans, currentPlan) {
@@ -419,7 +549,7 @@ const CustomizedPage = () => {
             <p className="heading-para">
               Connect every smile at home with our joyful fibre experience —
               bringing internet, TV, and OTT together to keep your family
-              entertained, united, and closer than ever
+              entertained, united, and closer than ever
             </p>
           </div>
 
