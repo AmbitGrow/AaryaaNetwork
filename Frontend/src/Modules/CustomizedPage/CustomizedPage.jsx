@@ -320,8 +320,16 @@ const CustomizedPage = () => {
     doc.setFontSize(10);
     doc.setFont("helvetica", "normal");
     doc.text("Your Trusted Internet Service Provider", 14, 38);
-    doc.text("Connect every smile at home with joyful fibre experience", 14, 43);
-    doc.text("Email: aaryaanetwork@gmail.com | Phone: +91-9962201081 , +91-7708067932", 14, 48);
+    doc.text(
+      "Connect every smile at home with joyful fibre experience",
+      14,
+      43
+    );
+    doc.text(
+      "Email: aaryaanetwork@gmail.com | Phone: +91-9962201081 , +91-7708067932",
+      14,
+      48
+    );
 
     // --- Customer Info & Invoice Details ---
     const rightStart = 120;
@@ -330,8 +338,12 @@ const CustomizedPage = () => {
     doc.setFont("helvetica", "normal");
     // doc.text("Customer Name: [To be filled]", rightStart, 38);
     // doc.text("Address: [To be filled]", rightStart, 43);
-    doc.text(`Date: ${new Date().toLocaleDateString('en-IN')}`, rightStart, 38);
-    doc.text(`Invoice #: INV-${Date.now().toString().slice(-6)}`, rightStart, 43);
+    doc.text(`Date: ${new Date().toLocaleDateString("en-IN")}`, rightStart, 38);
+    doc.text(
+      `Invoice #: INV-${Date.now().toString().slice(-6)}`,
+      rightStart,
+      43
+    );
 
     // --- Plan Details Table ---
     autoTable(doc, {
@@ -342,7 +354,7 @@ const CustomizedPage = () => {
         ["Internet Speed", currentPlan.speed],
         ["Plan Duration", currentPlan.duration],
         ["Service Provider", currentPlan.provider],
-        
+
         // Services & Features
         ["OTT Tier", currentPlan.ottTier],
         ["OTT Platforms", currentPlan.ottList.join(", ")],
@@ -350,30 +362,30 @@ const CustomizedPage = () => {
         ["Router Included", currentPlan.router],
         ["Android Box", currentPlan.androidBox ? "Included" : "Not Included"],
       ],
-      styles: { 
-        fontSize: 10, 
+      styles: {
+        fontSize: 10,
         cellPadding: 4,
         lineColor: [220, 220, 220],
-        lineWidth: 0.1
+        lineWidth: 0.1,
       },
-      headStyles: { 
-        fillColor: [41, 128, 185], 
-        textColor: 255, 
-        fontStyle: 'bold',
-        halign: "center" 
+      headStyles: {
+        fillColor: [41, 128, 185],
+        textColor: 255,
+        fontStyle: "bold",
+        halign: "center",
       },
       columnStyles: {
         0: { halign: "left", fontStyle: "bold", cellWidth: 60 },
         1: { halign: "left", cellWidth: 120 },
       },
       alternateRowStyles: {
-        fillColor: [245, 245, 245]
-      }
+        fillColor: [245, 245, 245],
+      },
     });
 
     // --- Pricing Breakdown Table ---
     const finalY = doc.lastAutoTable.finalY + 10;
-    
+
     autoTable(doc, {
       startY: finalY,
       head: [["Description", "Amount"]],
@@ -389,91 +401,105 @@ const CustomizedPage = () => {
         // ["Sub Total", `₹${(currentPlan.basePrice + currentPlan.ottCharge + currentPlan.tvCharge + currentPlan.installationFee + currentPlan.advancePayment).toFixed(2)}`],
         ["Discount Applied", currentPlan.discountAmount],
       ],
-      styles: { 
-        fontSize: 10, 
+      styles: {
+        fontSize: 10,
         cellPadding: 4,
         lineColor: [220, 220, 220],
-        lineWidth: 0.1
+        lineWidth: 0.1,
       },
-      headStyles: { 
-        fillColor: [52, 73, 94], 
-        textColor: 255, 
-        fontStyle: 'bold',
-        halign: "center" 
+      headStyles: {
+        fillColor: [52, 73, 94],
+        textColor: 255,
+        fontStyle: "bold",
+        halign: "center",
       },
       columnStyles: {
         0: { halign: "left", fontStyle: "normal", cellWidth: 120 },
         1: { halign: "right", fontStyle: "normal", cellWidth: 60 },
       },
       alternateRowStyles: {
-        fillColor: [248, 248, 248]
-      }
+        fillColor: [248, 248, 248],
+      },
     });
 
     // --- Grand Total Box ---
     const grandTotalY = doc.lastAutoTable.finalY + 2;
-    
+
     autoTable(doc, {
       startY: grandTotalY,
       body: [
-        ["GRAND TOTAL", currentPlan.firstTimeTotal ? currentPlan.firstTimeTotal : currentPlan.renewalTotal]
+        [
+          "GRAND TOTAL",
+          currentPlan.firstTimeTotal
+            ? currentPlan.firstTimeTotal
+            : currentPlan.renewalTotal,
+        ],
       ],
-      styles: { 
-  fontSize: 11, 
-  cellPadding: 5,
-  lineColor: [200, 200, 200],   // softer gray
-  lineWidth: 0.2,
-  textColor: [44, 62, 80],      // dark slate text
-},
+      styles: {
+        fontSize: 11,
+        cellPadding: 5,
+        lineColor: [200, 200, 200], // softer gray
+        lineWidth: 0.2,
+        textColor: [44, 62, 80], // dark slate text
+      },
 
-headStyles: { 
-  fillColor: [41, 128, 185],    // blue header
-  textColor: 255, 
-  fontStyle: 'bold',
-  halign: "center",
-  valign: "middle",
-  fontSize: 12,
-},
+      headStyles: {
+        fillColor: [41, 128, 185], // blue header
+        textColor: 255,
+        fontStyle: "bold",
+        halign: "center",
+        valign: "middle",
+        fontSize: 12,
+      },
 
-bodyStyles: {
-  fillColor: [245, 247, 250],   // light background for rows
-},
+      bodyStyles: {
+        fillColor: [245, 247, 250], // light background for rows
+      },
 
-alternateRowStyles: {
-  fillColor: [255, 255, 255],   // alternate white rows
-},
+      alternateRowStyles: {
+        fillColor: [255, 255, 255], // alternate white rows
+      },
 
-columnStyles: {
-  0: { halign: "left", fontStyle: "bold", cellWidth: 120 },
-  1: { halign: "right", fontStyle: "normal", cellWidth: 60 },
-},
+      columnStyles: {
+        0: { halign: "left", fontStyle: "bold", cellWidth: 120 },
+        1: { halign: "right", fontStyle: "normal", cellWidth: 60 },
+      },
 
-footStyles: {
-  fillColor: [39, 174, 96],     // green highlight for total
-  textColor: 255,
-  fontStyle: "bold",
-  halign: "right"
-}
-
+      footStyles: {
+        fillColor: [39, 174, 96], // green highlight for total
+        textColor: 255,
+        fontStyle: "bold",
+        halign: "right",
+      },
     });
 
     // --- Footer ---
     const footerY = doc.internal.pageSize.height - 30;
     doc.setDrawColor(220, 220, 220);
     doc.line(14, footerY - 5, 196, footerY - 5);
-    
+
     doc.setFontSize(9);
     doc.setTextColor(100, 100, 100);
     doc.text("Terms & Conditions:", 14, footerY);
     doc.text("• This is a system generated invoice", 14, footerY + 5);
-    doc.text("• All prices are inclusive of applicable taxes", 14, footerY + 10);
-    doc.text("• For support and queries, contact: aaryaanetwork@gmail.com", 14, footerY + 15);
-    
+    doc.text(
+      "• All prices are inclusive of applicable taxes",
+      14,
+      footerY + 10
+    );
+    doc.text(
+      "• For support and queries, contact: aaryaanetwork@gmail.com",
+      14,
+      footerY + 15
+    );
+
     doc.setTextColor(41, 128, 185);
     doc.text("Thank you for choosing Aaryaa Network!", 14, footerY + 20);
 
     // Save with descriptive filename
-    const filename = `Aaryaa_${currentPlan.speed.replace(/\s+/g, "_")}_${currentPlan.duration}_Plan_Invoice.pdf`;
+    const filename = `Aaryaa_${currentPlan.speed.replace(/\s+/g, "_")}_${
+      currentPlan.duration
+    }_Plan_Invoice.pdf`;
     doc.save(filename);
   };
 
@@ -559,7 +585,11 @@ footStyles: {
                 <div className="circle-dot"></div>
                 <p>Get Customized Plans</p>
               </div>
-              <div className="plan-type-selection">
+              <div
+                className={`plan-type-selection ${
+                  plans.length === 0 ? "disabled" : "enabled"
+                }`}
+              >
                 {PLAN_TYPES.map((pt) => (
                   <label key={pt.value}>
                     <input
@@ -569,6 +599,7 @@ footStyles: {
                       value={pt.value}
                       checked={planType === pt.value}
                       onChange={(e) => setPlanType(e.target.value)}
+                      disabled={plans.length === 0}
                     />
                     {pt.label}
                   </label>
