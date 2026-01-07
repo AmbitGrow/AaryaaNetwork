@@ -18,11 +18,12 @@ app.use(
 );
 app.use(cookieParser());
 
-connectDB();
 
 app.get("/api/ping", (req, res) => {
   res.status(200).send("OK");
 });
+
+connectDB();
 
 const contactRoutes=require("./routes/ContactRoutes");
 app.use("/api/contact",contactRoutes);
