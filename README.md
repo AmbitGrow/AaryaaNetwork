@@ -1,37 +1,40 @@
 # Aaryaa Fiber Network – Official Website
 
-This website was developed by **AmbitGrow**, a team of freelancing students, for **Aaryaa Fiber Network**, a local internet service provider based in **Sankarankovil**.
+🚀 A production-grade full-stack web application built to help a local ISP manage online enquiries and customer interactions.
 
-## 🌐 About the Project
+---
 
-The website provides a seamless platform for customers to:
+## Tech Stack
+React.js | Express.js | REST API | MongoDB | AWS | Git
 
-- Explore various broadband and fiber internet plans  
-- Learn about the company and its services  
-- Submit contact queries or service requests  
-- View personalized plans based on selected options  
+---
 
-The design is responsive and optimized for both desktop and mobile users.
+## Problem
+Aaryaa Fiber Network, a local internet service provider, had no digital system to showcase their plans or handle customer enquiries.  
+All customer requests were being handled manually, which was inefficient and difficult to scale.
 
-## 🛠️ Developed By
+---
 
-**AmbitGrow** – a passionate team of student freelancers building modern and reliable web solutions.
+## Solution
+This project is a full-stack web application that allows customers to:
+- View broadband and fiber plans  
+- Understand services and pricing  
+- Submit contact and service requests digitally  
 
-## 🏢 Client
+The system includes a React frontend and a REST API backend (Express + MongoDB) to handle form submissions, validation, and data storage.
 
-**Aaryaa Fiber Network**  
-Sankarankovil, Tamil Nadu, India  
-Delivering fast, affordable, and dependable internet services to homes and businesses.
+---
 
-## 📦 Tech Stack
+## Features
+- Responsive UI for mobile and desktop  
+- Contact and enquiry forms with server-side validation  
+- RESTful APIs for handling dynamic data  
+- Deployed as a live production website  
+- Basic security checks to prevent spam and invalid requests  
 
-- **Frontend**: React.js  
-- **Backend**: Express.js (Node.js)  
-- **Database**: MongoDB  
-- **Hosting**: AWS  
-- **Deployment**: GitHub + CI/CD
+---
 
-## 📞 Contact
-
-For project-related inquiries or freelance collaboration:  
-📧 ambitgrow@gmail.com
+## How to Run Locally
+```bash
+npm install
+npm start
