@@ -1,8 +1,54 @@
 const config = require("../models/Config");
-const xlsx = require("xlsx");
+const ExcelJS = require("exceljs");
 const fs = require("fs");
 const path = require("path");
 const Plan = require("../models/InternetPlans");
+
+const normalizeExcelValue = (value) => {
+  if (value === undefined || value === null) return undefined;
+  if (typeof value !== "object") return value;
+  if (value instanceof Date) return value;
+  if (Object.prototype.hasOwnProperty.call(value, "result")) return value.result;
+  if (typeof value.text === "string") return value.text;
+  if (Array.isArray(value.richText)) {
+    return value.richText.map((part) => part.text || "").join("");
+  }
+  return value;
+};
+
+const parsePlansFromExcel = async (filePath) => {
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.readFile(filePath);
+
+  const worksheet = workbook.worksheets[0];
+  if (!worksheet) return [];
+
+  const headerRow = worksheet.getRow(1);
+  const headers = headerRow.values
+    .slice(1)
+    .map((header) => (header ? String(normalizeExcelValue(header)).trim() : ""));
+
+  const plans = [];
+
+  for (let rowNumber = 2; rowNumber <= worksheet.rowCount; rowNumber++) {
+    const row = worksheet.getRow(rowNumber);
+    const plan = {};
+
+    headers.forEach((header, index) => {
+      if (!header) return;
+      const cellValue = normalizeExcelValue(row.getCell(index + 1).value);
+      if (cellValue !== undefined && cellValue !== null && cellValue !== "") {
+        plan[header] = cellValue;
+      }
+    });
+
+    if (Object.keys(plan).length > 0) {
+      plans.push(plan);
+    }
+  }
+
+  return plans;
+};
 
 // Upload & seed from Excel
 exports.seedPlansFromExcel = async (req, res) => {
@@ -10,11 +56,11 @@ exports.seedPlansFromExcel = async (req, res) => {
 
   try {
     const ext = path.extname(req.file.originalname).toLowerCase();
-    if (![".xlsx", ".xls"].includes(ext)) {
+    if (ext !== ".xlsx") {
       fs.unlinkSync(req.file.path);
       return res
         .status(400)
-        .json({ message: "Invalid file type. Only Excel files allowed." });
+        .json({ message: "Invalid file type. Only .xlsx files are allowed." });
     }
 
     if (req.file.size > 2 * 1024 * 1024) {
@@ -24,9 +70,7 @@ exports.seedPlansFromExcel = async (req, res) => {
         .json({ message: "File too large. Max 2MB allowed." });
     }
 
-    const workbook = xlsx.readFile(req.file.path);
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const plansData = xlsx.utils.sheet_to_json(sheet);
+    const plansData = await parsePlansFromExcel(req.file.path);
 
     let inserted = 0;
     let skipped = 0;

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
-const xlsx = require("xlsx");
+const ExcelJS = require("exceljs");
 const Plan = require("./models/InternetPlans");
 
 dotenv.config();
@@ -18,11 +18,55 @@ const connectDB = async () => {
   }
 };
 
+const normalizeExcelValue = (value) => {
+  if (value === undefined || value === null) return undefined;
+  if (typeof value !== "object") return value;
+  if (value instanceof Date) return value;
+  if (Object.prototype.hasOwnProperty.call(value, "result")) return value.result;
+  if (typeof value.text === "string") return value.text;
+  if (Array.isArray(value.richText)) {
+    return value.richText.map((part) => part.text || "").join("");
+  }
+  return value;
+};
+
+const parsePlansFromExcel = async (filePath) => {
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.readFile(filePath);
+
+  const worksheet = workbook.worksheets[0];
+  if (!worksheet) return [];
+
+  const headerRow = worksheet.getRow(1);
+  const headers = headerRow.values
+    .slice(1)
+    .map((header) => (header ? String(normalizeExcelValue(header)).trim() : ""));
+
+  const plans = [];
+
+  for (let rowNumber = 2; rowNumber <= worksheet.rowCount; rowNumber++) {
+    const row = worksheet.getRow(rowNumber);
+    const plan = {};
+
+    headers.forEach((header, index) => {
+      if (!header) return;
+      const cellValue = normalizeExcelValue(row.getCell(index + 1).value);
+      if (cellValue !== undefined && cellValue !== null && cellValue !== "") {
+        plan[header] = cellValue;
+      }
+    });
+
+    if (Object.keys(plan).length > 0) {
+      plans.push(plan);
+    }
+  }
+
+  return plans;
+};
+
 const seedPlans = async () => {
   try {
-    const workbook = xlsx.readFile("Fibernet_plans.xlsx");
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const plansData = xlsx.utils.sheet_to_json(sheet);
+    const plansData = await parsePlansFromExcel("Fibernet_plans.xlsx");
 
     console.log(`📄 Found ${plansData.length} rows in Excel`);
 

@@ -2,10 +2,22 @@ const Admin = require("../models/Admin");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Config = require("../models/Config");
-const speakeasy = require("speakeasy");
 
 exports.register = async (req, res) => {
+  if (process.env.ALLOW_PUBLIC_ADMIN_REGISTER !== "true") {
+    return res.status(403).json({ message: "Public registration is disabled" });
+  }
+
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
+  if (password.length < 8) {
+    return res.status(400).json({ message: "Password must be at least 8 characters" });
+  }
+
   const hash = await bcrypt.hash(password, 10);
   const admin = new Admin({ email, password: hash });
   await admin.save();
@@ -23,10 +35,12 @@ exports.loginAdmin = async (req, res) => {
 
     const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
 
+    const isProd = process.env.NODE_ENV === "production";
+
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true, // set to true if using HTTPS
-      sameSite: "none",
+      secure: isProd,
+      sameSite: isProd ? "none" : "lax",
       maxAge: 60 * 60 * 1000,
     });
 

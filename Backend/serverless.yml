@@ -1,0 +1,36 @@
+service: aaryaa-network-backend
+
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ap-south-1
+  stage: prod
+  timeout: 29
+  memorySize: 512
+  environment:
+    NODE_ENV: production
+    MONGO_URI: ${env:MONGO_URI}
+    JWT_SECRET: ${env:JWT_SECRET}
+    ALLOW_PUBLIC_ADMIN_REGISTER: ${env:ALLOW_PUBLIC_ADMIN_REGISTER, 'false'}
+    CLIENT_URL: ${env:CLIENT_URL}
+    EMAIL_USER: ${env:EMAIL_USER}
+    EMAIL_PASS: ${env:EMAIL_PASS}
+    RECEIVER_EMAIL: ${env:RECEIVER_EMAIL}
+
+functions:
+  api:
+    handler: server.handler
+    events:
+      - httpApi:
+          path: /
+          method: ANY
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+
+package:
+  patterns:
+    - "!uploads/**"
+    - "!.env"
