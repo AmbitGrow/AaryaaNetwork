@@ -1,4 +1,5 @@
 const { sendContactEmail } = require("../utils/sendContactEmail");
+const { createContactMessage } = require("../services/contactMessageService");
 const dns = require("dns");
 function isValidDomain(email) {
   return new Promise((resolve) => {
@@ -14,11 +15,69 @@ function isValidDomain(email) {
   });
 }
 exports.handleContactForm = async (req, res) => {
-  const { firstName, lastName, email, phone, address, message, selectedPlan } =
-    req.body;
+  let payload = req.body;
+
+  // Normalize payload across local Express and Lambda/API Gateway shapes.
+  if (Buffer.isBuffer(payload)) {
+    payload = payload.toString("utf8");
+  }
+
+  if (payload && typeof payload === "object" && payload.body !== undefined) {
+    payload = payload.body;
+  }
+
+  if (
+    (payload === undefined || payload === null || payload === "") &&
+    req.apiGateway?.event?.body
+  ) {
+    payload = req.apiGateway.event.body;
+
+    if (req.apiGateway.event.isBase64Encoded && typeof payload === "string") {
+      try {
+        payload = Buffer.from(payload, "base64").toString("utf8");
+      } catch (error) {
+        payload = "";
+      }
+    }
+  }
+
+  if (typeof payload === "string") {
+    try {
+      payload = JSON.parse(payload);
+    } catch (error) {
+      payload = {};
+    }
+  }
+
+  if (!payload || typeof payload !== "object") {
+    payload = {};
+  }
+
+  const {
+    firstName,
+    lastName,
+    email,
+    phone,
+    address,
+    message,
+    selectedPlan,
+  } = payload || {};
   const name = `${firstName} ${lastName}`;
-  if (!firstName || !lastName || !email || !phone || !address || !message) {
-    return res.status(400).json({ message: "All fields are required." });
+  const missingFields = [
+    ["firstName", firstName],
+    ["lastName", lastName],
+    ["email", email],
+    ["phone", phone],
+    ["address", address],
+    ["message", message],
+  ]
+    .filter(([, value]) => !String(value || "").trim())
+    .map(([field]) => field);
+
+  if (missingFields.length > 0) {
+    return res
+      .status(400)
+      .json({ message: "All fields are required.", missingFields });
   }
 
   const domainValid = await isValidDomain(email);
@@ -109,6 +168,17 @@ exports.handleContactForm = async (req, res) => {
 `;
 
     await sendContactEmail(subject, html); // new named function
+
+    // Save contact message to DynamoDB
+    await createContactMessage({
+      firstName,
+      lastName,
+      email,
+      phone,
+      address,
+      message,
+      selectedPlan,
+    });
 
     res.status(200).json({ message: "Message sent successfully!" });
   } catch (error) {

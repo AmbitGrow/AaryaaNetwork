@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const connectDB = require("./config/db");
 const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const serverless = require("serverless-http");
@@ -54,10 +53,9 @@ app.get("/api/ping", (req, res) => {
 });
 
 app.use("/api/login", loginLimiter);
-app.use("/api/contact/post", contactLimiter);
 
 const contactRoutes=require("./routes/ContactRoutes");
-app.use("/api/contact",contactRoutes);
+app.use("/api/contact", contactLimiter, contactRoutes);
 
 const InternetPlanRoutes = require("./routes/InternetPlanRoutes");
 app.use("/api/plans", InternetPlanRoutes);
@@ -72,7 +70,6 @@ let lambdaHandler;
 
 const getLambdaHandler = async () => {
   if (!lambdaHandler) {
-    await connectDB();
     lambdaHandler = serverless(app);
   }
   return lambdaHandler;
@@ -87,14 +84,7 @@ module.exports.handler = async (event, context) => {
 
 if (require.main === module) {
   const PORT = process.env.PORT || 5000;
-  connectDB()
-    .then(() => {
-      app.listen(PORT, "0.0.0.0", () => {
-        console.log(`Server started on port ${PORT}`);
-      });
-    })
-    .catch((error) => {
-      console.error("Failed to start server:", error.message);
-      process.exit(1);
-    });
+  app.listen(PORT, "0.0.0.0", () => {
+    console.log(`Server started on port ${PORT}`);
+  });
 }

@@ -1,8 +1,8 @@
-const config = require("../models/Config");
+const configService = require("../services/configService");
+const plansService = require("../services/plansService");
 const ExcelJS = require("exceljs");
 const fs = require("fs");
 const path = require("path");
-const Plan = require("../models/InternetPlans");
 
 const normalizeExcelValue = (value) => {
   if (value === undefined || value === null) return undefined;
@@ -50,7 +50,76 @@ const parsePlansFromExcel = async (filePath) => {
   return plans;
 };
 
-// Upload & seed from Excel
+const normalizePlanInput = (body) => {
+  const {
+    speed,
+    duration,
+    provider,
+    basePrice,
+    installationFee,
+    discountPercent,
+    planType,
+    ottTier,
+    ottCharge,
+    ottList,
+    tvChannels,
+    tvCharge,
+    advancePayment,
+    router,
+    androidBox,
+  } = body;
+
+  return {
+    speed,
+    duration,
+    provider,
+    basePrice: Number(basePrice) || 0,
+    installationFee: Number(installationFee) || 0,
+    discountPercent: Number(discountPercent) || 0,
+    planType,
+    ottTier: ottTier || "None",
+    ottCharge: ottCharge !== undefined ? Number(ottCharge) : 0,
+    ottList: Array.isArray(ottList)
+      ? ottList
+      : typeof ottList === "string"
+      ? ottList
+          .split(",")
+          .map((x) => x.trim())
+          .filter(Boolean)
+      : [],
+    tvChannels: tvChannels || "None",
+    tvCharge: tvCharge !== undefined ? Number(tvCharge) : 0,
+    advancePayment: Number(advancePayment) || 0,
+    router: router || "None",
+    androidBox:
+      androidBox === true ||
+      androidBox === "Yes" ||
+      androidBox?.toString().toLowerCase() === "yes",
+  };
+};
+
+const withComputedPriceFields = (plan, gstPercent) => {
+  const discount = plan.discountPercent
+    ? (Number(plan.basePrice) * Number(plan.discountPercent)) / 100
+    : 0;
+  const discountedBase = Number(plan.basePrice) - discount;
+  const addons = Number(plan.ottCharge || 0) + Number(plan.tvCharge || 0);
+  const gst = parseFloat((((discountedBase + addons) * gstPercent) / 100).toFixed(2));
+  const renewalTotal = parseFloat((discountedBase + addons + gst).toFixed(2));
+  const firstTimeTotal = parseFloat(
+    (renewalTotal + Number(plan.installationFee || 0) + Number(plan.advancePayment || 0)).toFixed(2)
+  );
+
+  return {
+    ...plan,
+    _id: plan.id,
+    discountAmount: discount,
+    gst,
+    renewalTotal,
+    firstTimeTotal,
+  };
+};
+
 exports.seedPlansFromExcel = async (req, res) => {
   if (!req.file) return res.status(400).json({ message: "No file uploaded" });
 
@@ -78,13 +147,11 @@ exports.seedPlansFromExcel = async (req, res) => {
     for (const plan of plansData) {
       if (
         plan.speed &&
-        ["Monthly", "Quarterly", "Half-Yearly", "Yearly"].includes(
-          plan.duration
-        ) &&
+        ["Monthly", "Quarterly", "Half-Yearly", "Yearly"].includes(plan.duration) &&
         plan.provider &&
         typeof plan.basePrice === "number"
       ) {
-        const exists = await Plan.findOne({
+        const exists = await plansService.findDuplicatePlan({
           speed: plan.speed,
           duration: plan.duration,
           provider: plan.provider,
@@ -98,28 +165,30 @@ exports.seedPlansFromExcel = async (req, res) => {
           continue;
         }
 
-        const newPlan = new Plan({
+        const newPlan = {
           speed: plan.speed,
           duration: plan.duration,
           provider: plan.provider,
-          basePrice: plan.basePrice,
-          installationFee: plan.installationFee || 0,
-          discountPercent: plan.discountPercent || 0,
+          basePrice: Number(plan.basePrice) || 0,
+          installationFee: Number(plan.installationFee) || 0,
+          discountPercent: Number(plan.discountPercent) || 0,
           planType: plan.planType || "internet",
           ottTier: plan.ottTier || "None",
           ottCharge: Number(plan.ottCharge) || 0,
           ottList:
             typeof plan.ottList === "string"
               ? plan.ottList.split(",").map((p) => p.trim())
+              : Array.isArray(plan.ottList)
+              ? plan.ottList
               : [],
           tvChannels: plan.tvChannels || "None",
           tvCharge: Number(plan.tvCharge) || 0,
           advancePayment: Number(plan.advancePayment) || 0,
           router: plan.router || "None",
           androidBox: plan.androidBox?.toString().toLowerCase() === "yes",
-        });
+        };
 
-        await newPlan.save();
+        await plansService.createPlan(newPlan);
         inserted++;
       } else {
         skipped++;
@@ -137,7 +206,6 @@ exports.seedPlansFromExcel = async (req, res) => {
   }
 };
 
-// Get all plans (with expanded price logic and new fields)
 exports.getAllPlans = async (req, res) => {
   try {
     const { planType, speed, duration, provider } = req.query;
@@ -147,40 +215,11 @@ exports.getAllPlans = async (req, res) => {
     if (duration) filter.duration = duration;
     if (provider) filter.provider = provider;
 
-    const plans = await Plan.find(filter);
-    const configData = await config.findOne();
-    const gstPercent = configData ? configData.gstPercent : 18;
+    const plans = await plansService.listPlans(filter);
+    const configData = await configService.getConfig();
+    const gstPercent = configData ? Number(configData.gstPercent) : 18;
 
-    const updatedPlans = plans.map((plan) => {
-      // Calculate discount and price breakdowns
-      const discount = plan.discountPercent
-        ? (plan.basePrice * plan.discountPercent) / 100
-        : 0;
-      const discountedBase = plan.basePrice - discount;
-      const addons = (plan.ottCharge || 0) + (plan.tvCharge || 0);
-      const gst = parseFloat(
-        (((discountedBase + addons) * gstPercent) / 100).toFixed(2)
-      );
-      const renewalTotal = parseFloat(
-        (discountedBase + addons + gst).toFixed(2)
-      );
-      const firstTimeTotal = parseFloat(
-        (
-          renewalTotal +
-          (plan.installationFee || 0) +
-          (plan.advancePayment || 0)
-        ).toFixed(2)
-      );
-
-      // Return all fields
-      return {
-        ...plan._doc,
-        discountAmount: discount,
-        gst,
-        renewalTotal,
-        firstTimeTotal,
-      };
-    });
+    const updatedPlans = plans.map((plan) => withComputedPriceFields(plan, gstPercent));
 
     res.status(200).json(updatedPlans);
   } catch (error) {
@@ -189,179 +228,70 @@ exports.getAllPlans = async (req, res) => {
   }
 };
 
-// Get single plan by ID (with all calculated fields and bundle info)
 exports.getPlanById = async (req, res) => {
   const { id } = req.params;
   try {
-    const plan = await Plan.findById(id);
+    const plan = await plansService.getPlanById(id);
     if (!plan) return res.status(404).json({ message: "Plan not found" });
 
-    const configData = await config.findOne();
-    const gstPercent = configData ? configData.gstPercent : 18;
+    const configData = await configService.getConfig();
+    const gstPercent = configData ? Number(configData.gstPercent) : 18;
 
-    const discount = plan.discountPercent
-      ? (plan.basePrice * plan.discountPercent) / 100
-      : 0;
-    const discountedBase = plan.basePrice - discount;
-    const addons = (plan.ottCharge || 0) + (plan.tvCharge || 0);
-    const gst = parseFloat(
-      (((discountedBase + addons) * gstPercent) / 100).toFixed(2)
-    );
-    const renewalTotal = parseFloat((discountedBase + addons + gst).toFixed(2));
-    const firstTimeTotal = parseFloat(
-      (
-        renewalTotal +
-        (plan.installationFee || 0) +
-        (plan.advancePayment || 0)
-      ).toFixed(2)
-    );
-
-    res.status(200).json({
-      ...plan._doc,
-      discountAmount: discount,
-      gst,
-      renewalTotal,
-      firstTimeTotal,
-    });
+    res.status(200).json(withComputedPriceFields(plan, gstPercent));
   } catch (error) {
     console.error("Error fetching plan:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
-// Add a new plan
 exports.addPlan = async (req, res) => {
   try {
-    const {
-      speed,
-      duration,
-      provider,
-      basePrice,
-      installationFee,
-      discountPercent,
-      planType,
-      ottTier,
-      ottCharge,
-      ottList,
-      tvChannels,
-      tvCharge,
-      advancePayment,
-      router,
-      androidBox,
-    } = req.body;
+    const normalizedPlan = normalizePlanInput(req.body);
 
-    if (!speed || !duration || !provider || !basePrice || !planType) {
+    if (
+      !normalizedPlan.speed ||
+      !normalizedPlan.duration ||
+      !normalizedPlan.provider ||
+      !normalizedPlan.basePrice ||
+      !normalizedPlan.planType
+    ) {
       return res.status(400).json({ message: "Required fields missing" });
     }
 
-    // Parse & sanitize arrays/booleans
-    const normalizedPlan = {
-      speed,
-      duration,
-      provider,
-      basePrice: Number(basePrice) || 0,
-      installationFee: Number(installationFee) || 0,
-      discountPercent: Number(discountPercent) || 0,
-      planType,
-      ottTier: ottTier || "None",
-      ottCharge: ottCharge !== undefined ? Number(ottCharge) : -1,
-      ottList: Array.isArray(ottList)
-        ? ottList
-        : typeof ottList === "string"
-        ? ottList
-            .split(",")
-            .map((x) => x.trim())
-            .filter(Boolean)
-        : [],
-      tvChannels: tvChannels || "None",
-      tvCharge: tvCharge !== undefined ? Number(tvCharge) : -1,
-      advancePayment: Number(advancePayment) || 0,
-      router: router || "None",
-      androidBox:
-        androidBox === true ||
-        androidBox === "Yes" ||
-        androidBox?.toString().toLowerCase() === "yes",
-    };
-
-    const newPlan = new Plan(normalizedPlan);
-    await newPlan.save();
-    res.status(201).json(newPlan);
+    const newPlan = await plansService.createPlan(normalizedPlan);
+    res.status(201).json({ ...newPlan, _id: newPlan.id });
   } catch (error) {
     console.error("Error adding plan:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
-// Update plan
 exports.updatePlan = async (req, res) => {
   const { id } = req.params;
   try {
-    const {
-      speed,
-      duration,
-      provider,
-      basePrice,
-      installationFee,
-      discountPercent,
-      planType,
-      ottTier,
-      ottCharge,
-      ottList,
-      tvChannels,
-      tvCharge,
-      advancePayment,
-      router,
-      androidBox,
-    } = req.body;
+    const normalizedPlan = normalizePlanInput(req.body);
 
-    // Parse & sanitize arrays/booleans
-    const normalizedPlan = {
-      speed,
-      duration,
-      provider,
-      basePrice: Number(basePrice) || 0,
-      installationFee: Number(installationFee) || 0,
-      discountPercent: Number(discountPercent) || 0,
-      planType,
-      ottTier: ottTier || "None",
-      ottCharge: ottCharge !== undefined ? Number(ottCharge) : -1,
-      ottList: Array.isArray(ottList)
-        ? ottList
-        : typeof ottList === "string"
-        ? ottList
-            .split(",")
-            .map((x) => x.trim())
-            .filter(Boolean)
-        : [],
-      tvChannels: tvChannels || "None",
-      tvCharge: tvCharge !== undefined ? Number(tvCharge) : -1,
-      advancePayment: Number(advancePayment) || 0,
-      router: router || "None",
-      androidBox:
-        androidBox === true ||
-        androidBox === "Yes" ||
-        androidBox?.toString().toLowerCase() === "yes",
-    };
-
-    const updatedPlan = await Plan.findByIdAndUpdate(id, normalizedPlan, {
-      new: true,
-    });
-    if (!updatedPlan)
+    const updatedPlan = await plansService.updatePlan(id, normalizedPlan);
+    if (!updatedPlan) {
       return res.status(404).json({ message: "Plan not found" });
-    res.status(200).json(updatedPlan);
+    }
+
+    res.status(200).json({ ...updatedPlan, _id: updatedPlan.id });
   } catch (error) {
     console.error("Error updating plan:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
-// Delete plan
 exports.deletePlan = async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedPlan = await Plan.findByIdAndDelete(id);
-    if (!deletedPlan)
+    const existing = await plansService.getPlanById(id);
+    if (!existing) {
       return res.status(404).json({ message: "Plan not found" });
+    }
+
+    await plansService.deletePlan(id);
     res.status(200).json({ message: "Plan deleted successfully" });
   } catch (error) {
     console.error("Error deleting plan:", error);
@@ -378,42 +308,15 @@ exports.filterPlans = async (req, res) => {
     if (provider) filter.provider = provider;
     if (planType) filter.planType = planType;
 
-    const plans = await Plan.find(filter);
-    if (!plans.length)
+    const plans = await plansService.listPlans(filter);
+    if (!plans.length) {
       return res.status(404).json({ message: "No plans found" });
+    }
 
-    const configData = await config.findOne();
-    const gstPercent = configData ? configData.gstPercent : 18;
+    const configData = await configService.getConfig();
+    const gstPercent = configData ? Number(configData.gstPercent) : 18;
 
-    const updatedPlans = plans.map((plan) => {
-      // Discount and totals logic with all new fields
-      const discount = plan.discountPercent
-        ? (plan.basePrice * plan.discountPercent) / 100
-        : 0;
-      const discountedBase = plan.basePrice - discount;
-      const addons = (plan.ottCharge || 0) + (plan.tvCharge || 0);
-      const gst = parseFloat(
-        (((discountedBase + addons) * gstPercent) / 100).toFixed(2)
-      );
-      const renewalTotal = parseFloat(
-        (discountedBase + addons + gst).toFixed(2)
-      );
-      const firstTimeTotal = parseFloat(
-        (
-          renewalTotal +
-          (plan.installationFee || 0) +
-          (plan.advancePayment || 0)
-        ).toFixed(2)
-      );
-
-      return {
-        ...plan._doc,
-        discountAmount: discount,
-        gst,
-        renewalTotal,
-        firstTimeTotal,
-      };
-    });
+    const updatedPlans = plans.map((plan) => withComputedPriceFields(plan, gstPercent));
 
     res.status(200).json(updatedPlans);
   } catch (error) {
@@ -422,13 +325,12 @@ exports.filterPlans = async (req, res) => {
   }
 };
 
-// In InternetPlansController.js
 exports.getRecentPlans = async (req, res) => {
   try {
-    const recentPlans = await Plan.find().sort({ updatedAt: -1 }).limit(5);
-    res.status(200).json(recentPlans);
+    const recentPlans = await plansService.getRecentPlans(5);
+    res.status(200).json(recentPlans.map((plan) => ({ ...plan, _id: plan.id })));
   } catch (error) {
-    console.error("Error fetching recent plans:", error); // This will show the real error in your server logs
+    console.error("Error fetching recent plans:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
