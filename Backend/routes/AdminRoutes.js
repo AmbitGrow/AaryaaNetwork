@@ -17,10 +17,11 @@ router.use(auth);
 router.get("/get-gst", auth, getGst);
 router.post("/set-gst", auth, setGst);
 router.post("/logout", (req, res) => {
+  const isProd = process.env.NODE_ENV === "production";
   res.clearCookie("token", {
     httpOnly: true,
-    secure: true, // true if using HTTPS
-    sameSite: "none",
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
   });
   res.json({ message: "Logged out successfully" });
 });

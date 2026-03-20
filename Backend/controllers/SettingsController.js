@@ -1,8 +1,8 @@
-const Admin = require("../models/Admin");
 const bcrypt = require("bcrypt");
 const dns = require("dns").promises;
 const sendOtpEmail = require("../utils/mailer.js");
 const otpStore = require("../utils/otpStore.js");
+const adminService = require("../services/adminService");
 
 exports.addAdmin = async (req, res) => {
   try {
@@ -18,14 +18,12 @@ exports.addAdmin = async (req, res) => {
     if (!mxRecords || mxRecords.length === 0)
       return res.status(400).json({ message: "Invalid email domain" });
 
-    const existingAdmin = await Admin.findOne({ email });
+    const existingAdmin = await adminService.getByEmail(email);
     if (existingAdmin)
       return res.status(400).json({ message: "Admin already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newAdmin = new Admin({ email, password: hashedPassword });
-
-    await newAdmin.save();
+    await adminService.createAdmin({ email, password: hashedPassword });
     res.status(201).json({ message: "New admin added successfully" });
   } catch (err) {
     console.error("Add Admin Error:", err);
@@ -36,7 +34,7 @@ exports.changePassword = async (req, res) => {
   try {
     const { email, currentPassword, newPassword } = req.body;
 
-    const admin = await Admin.findOne({ email });
+    const admin = await adminService.getByEmail(email);
     if (!admin) return res.status(404).json({ message: "Admin not found" });
 
     const isMatch = await bcrypt.compare(currentPassword, admin.password);
@@ -44,8 +42,7 @@ exports.changePassword = async (req, res) => {
       return res.status(401).json({ message: "Incorrect current password" });
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-    admin.password = hashedPassword;
-    await admin.save();
+    await adminService.updateAdmin({ ...admin, password: hashedPassword });
 
     res.json({ message: "Password updated successfully" });
   } catch (err) {
@@ -57,7 +54,7 @@ exports.changePassword = async (req, res) => {
 exports.requestEmailChangeOtp = async (req, res) => {
   const { currentEmail } = req.body;
   try {
-    const admin = await Admin.findOne({ email: currentEmail });
+    const admin = await adminService.getByEmail(currentEmail);
     if (!admin) return res.status(404).json({ message: "Email not found" });
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -79,15 +76,15 @@ exports.verifyOtpAndUpdateEmail = async (req, res) => {
       return res.status(400).json({ message: "Invalid or expired OTP" });
     }
 
-    const existingAdmin = await Admin.findOne({ email: newEmail });
+    const existingAdmin = await adminService.getByEmail(newEmail);
     if (existingAdmin)
       return res.status(409).json({ message: "New email already exists" });
 
-    const updated = await Admin.findOneAndUpdate(
-      { email: currentEmail },
-      { email: newEmail },
-      { new: true }
-    );
+    const currentAdmin = await adminService.getByEmail(currentEmail);
+    const updated = await adminService.updateAdmin({
+      ...currentAdmin,
+      email: newEmail,
+    });
 
     otpStore.delete(currentEmail);
     res.json({

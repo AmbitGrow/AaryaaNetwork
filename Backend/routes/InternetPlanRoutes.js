@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const multer = require("multer");
-const upload = multer({ dest: "uploads/" });
+
+const uploadDir = process.env.AWS_LAMBDA_FUNCTION_NAME ? "/tmp" : "uploads/";
+const upload = multer({ dest: uploadDir });
 
 const {
   getAllPlans,
