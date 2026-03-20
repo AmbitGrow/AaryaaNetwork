@@ -51,3 +51,11 @@ build/
 
 # Optional: test coverage
 coverage/
+
+# Serverless deployment artifacts (can contain resolved env secrets)
+.serverless/
+
+# Local env and secret files
+.env
+.env.*
+!.env.example

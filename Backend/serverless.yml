@@ -1,0 +1,57 @@
+service: aaryaa-network-backend
+
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: ap-south-1
+  stage: prod
+  timeout: 29
+  memorySize: 512
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:UpdateItem
+            - dynamodb:DeleteItem
+            - dynamodb:Scan
+            - dynamodb:Query
+            - dynamodb:BatchWriteItem
+          Resource:
+            - arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/${env:DDB_TABLE_ADMINS}
+            - arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/${env:DDB_TABLE_CONFIGS}
+            - arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/${env:DDB_TABLE_PLANS}
+            - arn:aws:dynamodb:${self:provider.region}:${aws:accountId}:table/${env:DDB_TABLE_CONTACTMESSAGES}
+  environment:
+    NODE_ENV: production
+    MONGO_URI: ${env:MONGO_URI}
+    DDB_TABLE_ADMINS: ${env:DDB_TABLE_ADMINS}
+    DDB_TABLE_CONFIGS: ${env:DDB_TABLE_CONFIGS}
+    DDB_TABLE_PLANS: ${env:DDB_TABLE_PLANS}
+    DDB_TABLE_CONTACTMESSAGES: ${env:DDB_TABLE_CONTACTMESSAGES}
+    JWT_SECRET: ${env:JWT_SECRET}
+    ALLOW_PUBLIC_ADMIN_REGISTER: ${env:ALLOW_PUBLIC_ADMIN_REGISTER, 'false'}
+    CLIENT_URL: ${env:CLIENT_URL}
+    EMAIL_USER: ${env:EMAIL_USER}
+    EMAIL_PASS: ${env:EMAIL_PASS}
+    RECEIVER_EMAIL: ${env:RECEIVER_EMAIL}
+
+functions:
+  api:
+    handler: server.handler
+    events:
+      - httpApi:
+          path: /
+          method: ANY
+      - httpApi:
+          path: /{proxy+}
+          method: ANY
+
+package:
+  patterns:
+    - "!uploads/**"
+    - "!.env"
