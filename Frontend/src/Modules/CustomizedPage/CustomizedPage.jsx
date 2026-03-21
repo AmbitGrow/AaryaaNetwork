@@ -77,6 +77,57 @@ const buildPlanKey = ({
   tvChannels || "",
 ].join("||");
 
+const keyForPlanType = ({
+  speed,
+  duration,
+  provider,
+  ottTier,
+  tvChannels,
+  planType,
+}) => {
+  if (planType === "internet") {
+    return buildPlanKey({
+      speed,
+      duration,
+      provider,
+      planType,
+      ottTier: "",
+      tvChannels: "",
+    });
+  }
+
+  if (planType === "internet+ott") {
+    return buildPlanKey({
+      speed,
+      duration,
+      provider,
+      planType,
+      ottTier: ottTier || "",
+      tvChannels: "",
+    });
+  }
+
+  if (planType === "internet+tv") {
+    return buildPlanKey({
+      speed,
+      duration,
+      provider,
+      planType,
+      ottTier: "",
+      tvChannels: tvChannels || "",
+    });
+  }
+
+  return buildPlanKey({
+    speed,
+    duration,
+    provider,
+    planType,
+    ottTier: ottTier || "",
+    tvChannels: tvChannels || "",
+  });
+};
+
 const SkeletonLoader = () => {
   return (
     <div className="skeleton-wrapper">
@@ -262,28 +313,25 @@ const CustomizedPage = () => {
   const planIndex = useMemo(() => {
     const map = new Map();
     for (const plan of plans) {
-      const base = {
-        speed: plan.speed,
-        duration: plan.duration,
-        provider: plan.provider,
-        ottTier: plan.ottTier,
-        tvChannels: plan.tvChannels,
-      };
+      const planTypeFromData =
+        plan.planType ||
+        (plan.ottTier && plan.ottTier !== "None"
+          ? plan.tvChannels && plan.tvChannels !== "None"
+            ? "internet+tv+ott"
+            : "internet+ott"
+          : plan.tvChannels && plan.tvChannels !== "None"
+          ? "internet+tv"
+          : "internet");
 
       map.set(
-        buildPlanKey({ ...base, planType: "internet" }),
-        plan
-      );
-      map.set(
-        buildPlanKey({ ...base, planType: "internet+ott" }),
-        plan
-      );
-      map.set(
-        buildPlanKey({ ...base, planType: "internet+tv" }),
-        plan
-      );
-      map.set(
-        buildPlanKey({ ...base, planType: "internet+tv+ott" }),
+        keyForPlanType({
+          speed: plan.speed,
+          duration: plan.duration,
+          provider: plan.provider,
+          ottTier: plan.ottTier,
+          tvChannels: plan.tvChannels,
+          planType: planTypeFromData,
+        }),
         plan
       );
     }
@@ -386,7 +434,7 @@ const CustomizedPage = () => {
 
     return (
       planIndex.get(
-        buildPlanKey({
+        keyForPlanType({
           speed: selectedSpeed,
           duration: selectedDuration,
           provider: selectedProvider,
