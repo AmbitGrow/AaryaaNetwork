@@ -149,7 +149,7 @@ const CustomizedPage = () => {
         ];
         setProviderOptions(uniqueProviders);
         setSelectedProvider(uniqueProviders[0] || "");
-      } catch (err) {
+      } catch {
         setPlans([]);
       } finally {
         setLoading(false);
@@ -587,7 +587,7 @@ const CustomizedPage = () => {
               </div>
               <div
                 className={`plan-type-selection ${
-                  plans.length === 0 ? "disabled" : "enabled"
+                  loading ? "disabled" : "enabled"
                 }`}
               >
                 {PLAN_TYPES.map((pt) => (
@@ -599,7 +599,7 @@ const CustomizedPage = () => {
                       value={pt.value}
                       checked={planType === pt.value}
                       onChange={(e) => setPlanType(e.target.value)}
-                      disabled={plans.length === 0}
+                      disabled={loading}
                     />
                     {pt.label}
                   </label>
@@ -608,10 +608,10 @@ const CustomizedPage = () => {
             </div>
             <div
               className={`fade-section ${
-                plans.length === 0 ? "loading" : "loaded"
+                loading ? "loading" : "loaded"
               }`}
             >
-              {plans.length === 0 ? (
+              {loading ? (
                 <SkeletonLoader />
               ) : (
                 <div className="total-subcontainer">
