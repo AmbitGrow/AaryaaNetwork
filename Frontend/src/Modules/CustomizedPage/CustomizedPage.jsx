@@ -49,6 +49,16 @@ const providerLogoMap = {
   BSNL: bsnl,
   "Airtel-Xstream": airtelxstream,
 };
+
+const isValidSpeedLabel = (speed) => {
+  const normalized = String(speed || "").toLowerCase();
+  return normalized.includes("mbps") || normalized.includes("gbps");
+};
+
+const getUniqueValues = (values) => [
+  ...new Set(values.filter((value) => value !== undefined && value !== null && value !== "")),
+];
+
 const SkeletonLoader = () => {
   return (
     <div className="skeleton-wrapper">
@@ -104,9 +114,7 @@ const SkeletonLoader = () => {
 const CustomizedPage = () => {
   const plansRef = useRef(null);
   const [plans, setPlans] = useState([]);
-  const [speedOptions, setSpeedOptions] = useState([]);
-  const [durationOptions] = useState(DURATION_OPTIONS);
-  const [providerOptions, setProviderOptions] = useState([]);
+  const durationOptions = DURATION_OPTIONS;
   const [planType, setPlanType] = useState("internet");
   const [loading, setLoading] = useState(true);
 
@@ -126,6 +134,29 @@ const CustomizedPage = () => {
   const [currentPlan, setCurrentPlan] = useState(null);
   const navigate = useNavigate();
 
+  const speedOptions = useMemo(
+    () => getUniqueValues(plans.map((p) => p.speed)).filter(isValidSpeedLabel),
+    [plans]
+  );
+
+  const providerOptions = useMemo(() => {
+    if (!selectedSpeed) return [];
+    const providersForSpeed = plans
+      .filter((p) => p.speed === selectedSpeed)
+      .map((p) => p.provider);
+    return getUniqueValues(providersForSpeed);
+  }, [plans, selectedSpeed]);
+
+  const availableDurationOptions = useMemo(() => {
+    if (!selectedSpeed || !selectedProvider) return [];
+    const durations = plans
+      .filter(
+        (p) => p.speed === selectedSpeed && p.provider === selectedProvider
+      )
+      .map((p) => p.duration);
+    return getUniqueValues(durations);
+  }, [plans, selectedSpeed, selectedProvider]);
+
   // Step 1: fetch all plans for the selected planType
   useEffect(() => {
     const fetchPlans = async () => {
@@ -134,21 +165,9 @@ const CustomizedPage = () => {
         const res = await API.get("/api/plans/filter", {
           params: { planType },
         });
-        const data = res.data;
-        setPlans(data);
-
-        // Rest of your existing logic...
-        const uniqueSpeeds = [...new Set(data.map((p) => p.speed))];
-        setSpeedOptions(uniqueSpeeds);
-        const defaultSpeed = uniqueSpeeds[0] || "";
-        setSelectedSpeed(defaultSpeed);
-
-        const providersForSpeed = data.filter((p) => p.speed === defaultSpeed);
-        const uniqueProviders = [
-          ...new Set(providersForSpeed.map((p) => p.provider)),
-        ];
-        setProviderOptions(uniqueProviders);
-        setSelectedProvider(uniqueProviders[0] || "");
+        const data = Array.isArray(res.data) ? res.data : [];
+        const sanitizedData = data.filter((plan) => isValidSpeedLabel(plan.speed));
+        setPlans(sanitizedData);
       } catch {
         setPlans([]);
       } finally {
@@ -158,19 +177,49 @@ const CustomizedPage = () => {
     fetchPlans();
   }, [planType]);
 
-  // Step 2: update providers when speed changes
+  // Keep speed selection valid for the selected plan type.
   useEffect(() => {
-    if (!selectedSpeed) return;
-    const providersForSpeed = plans.filter((p) => p.speed === selectedSpeed);
-    const uniqueProviders = [
-      ...new Set(providersForSpeed.map((p) => p.provider)),
-    ];
-    setProviderOptions(uniqueProviders);
-
-    if (!uniqueProviders.includes(selectedProvider)) {
-      setSelectedProvider(uniqueProviders[0] || "");
+    if (!speedOptions.length) {
+      if (selectedSpeed) setSelectedSpeed("");
+      return;
     }
-  }, [selectedSpeed, plans, selectedProvider]);
+
+    if (!selectedSpeed || !speedOptions.includes(selectedSpeed)) {
+      setSelectedSpeed(speedOptions[0]);
+    }
+  }, [speedOptions, selectedSpeed]);
+
+  // Keep provider selection valid for the selected speed.
+  useEffect(() => {
+    if (!selectedSpeed || !providerOptions.length) {
+      if (selectedProvider) setSelectedProvider("");
+      return;
+    }
+
+    if (!selectedProvider || !providerOptions.includes(selectedProvider)) {
+      setSelectedProvider(providerOptions[0]);
+    }
+  }, [selectedSpeed, providerOptions, selectedProvider]);
+
+  // Keep duration selection valid for selected speed+provider.
+  useEffect(() => {
+    if (!selectedSpeed || !selectedProvider || !availableDurationOptions.length) {
+      if (selectedDuration) setSelectedDuration("");
+      return;
+    }
+
+    if (
+      !selectedDuration ||
+      !availableDurationOptions.includes(selectedDuration)
+    ) {
+      setSelectedDuration(availableDurationOptions[0]);
+    }
+  }, [
+    selectedSpeed,
+    selectedProvider,
+    availableDurationOptions,
+    selectedDuration,
+  ]);
 
   // Compute available OTT/TV options for current context
   const availablePlans = plans.filter(
@@ -204,59 +253,78 @@ const CustomizedPage = () => {
       : [];
   }, [planType, availablePlans]);
 
-  // Auto-select first available OTT/TV option if needed
+  // Keep OTT/TV child selections valid when parent context changes.
   useEffect(() => {
-    // Auto-select first available Speed if current is invalid or empty
-    if (speedOptions.length > 0 && !speedOptions.includes(selectedSpeed)) {
-      setSelectedSpeed(speedOptions[0]);
-      return; // Exit early so dependent ops wait for new selection
-    }
-
-    // Auto-select first available Provider if current is invalid or empty
-    if (
-      providerOptions.length > 0 &&
-      !providerOptions.includes(selectedProvider)
-    ) {
-      setSelectedProvider(providerOptions[0]);
-      return;
-    }
-
-    // Only for plan types with OTT
     if (planType.includes("ott")) {
       if (
         ottTierOptions.length > 0 &&
         (!selectedOttTier || !ottTierOptions.includes(selectedOttTier))
       ) {
         setSelectedOttTier(ottTierOptions[0]);
-        return;
+      } else if (ottTierOptions.length === 0 && selectedOttTier) {
+        setSelectedOttTier("");
       }
     } else if (selectedOttTier) {
       setSelectedOttTier("");
     }
 
-    // Only for plan types with TV
     if (planType.includes("tv")) {
       if (
         tvChannelOptions.length > 0 &&
         (!selectedTvChannel || !tvChannelOptions.includes(selectedTvChannel))
       ) {
         setSelectedTvChannel(tvChannelOptions[0]);
-        return;
+      } else if (tvChannelOptions.length === 0 && selectedTvChannel) {
+        setSelectedTvChannel("");
       }
     } else if (selectedTvChannel) {
       setSelectedTvChannel("");
     }
   }, [
-    speedOptions,
-    providerOptions,
     ottTierOptions,
     tvChannelOptions,
-    selectedSpeed,
-    selectedProvider,
     selectedOttTier,
     selectedTvChannel,
     planType,
   ]);
+
+  const handlePlanTypeChange = (nextPlanType) => {
+    if (nextPlanType === planType) return;
+    setPlanType(nextPlanType);
+    setSelectedSpeed("");
+    setSelectedProvider("");
+    setSelectedDuration("");
+    setSelectedOttTier("");
+    setSelectedTvChannel("");
+    setCurrentPlan(null);
+  };
+
+  const handleSpeedChange = (speed) => {
+    if (speed === selectedSpeed) return;
+    setSelectedSpeed(speed);
+    setSelectedProvider("");
+    setSelectedDuration("");
+    setSelectedOttTier("");
+    setSelectedTvChannel("");
+    setCurrentPlan(null);
+  };
+
+  const handleProviderChange = (provider) => {
+    if (provider === selectedProvider) return;
+    setSelectedProvider(provider);
+    setSelectedDuration("");
+    setSelectedOttTier("");
+    setSelectedTvChannel("");
+    setCurrentPlan(null);
+  };
+
+  const handleDurationChange = (duration) => {
+    if (duration === selectedDuration) return;
+    setSelectedDuration(duration);
+    setSelectedOttTier("");
+    setSelectedTvChannel("");
+    setCurrentPlan(null);
+  };
 
   // Step 4: set current plan based on ALL selections including ottTier/tvChannels
   useEffect(() => {
@@ -598,7 +666,7 @@ const CustomizedPage = () => {
                       name="planType"
                       value={pt.value}
                       checked={planType === pt.value}
-                      onChange={(e) => setPlanType(e.target.value)}
+                      onChange={(e) => handlePlanTypeChange(e.target.value)}
                       disabled={loading}
                     />
                     {pt.label}
@@ -627,7 +695,7 @@ const CustomizedPage = () => {
                               className={`option-button ${
                                 selectedSpeed === speed ? "active" : ""
                               }`}
-                              onClick={() => setSelectedSpeed(speed)}
+                              onClick={() => handleSpeedChange(speed)}
                               type="button"
                             >
                               {speed}
@@ -645,7 +713,7 @@ const CustomizedPage = () => {
                               className={`option-button ${
                                 selectedProvider === provider ? "active" : ""
                               }`}
-                              onClick={() => setSelectedProvider(provider)}
+                              onClick={() => handleProviderChange(provider)}
                               type="button"
                             >
                               <div className="circle">
@@ -673,11 +741,8 @@ const CustomizedPage = () => {
                         <label>Duration:</label>
                         <div className="option-row-group-3">
                           {durationOptions.map((duration) => {
-                            const isAvailable = plans.some(
-                              (p) =>
-                                p.speed === selectedSpeed &&
-                                p.provider === selectedProvider &&
-                                p.duration === duration
+                            const isAvailable = availableDurationOptions.includes(
+                              duration
                             );
                             return (
                               <button
@@ -686,7 +751,7 @@ const CustomizedPage = () => {
                                   selectedDuration === duration ? "active" : ""
                                 }`}
                                 onClick={() =>
-                                  isAvailable && setSelectedDuration(duration)
+                                  isAvailable && handleDurationChange(duration)
                                 }
                                 type="button"
                                 disabled={!isAvailable}
@@ -1066,10 +1131,12 @@ const CustomizedPage = () => {
                         </div>
                       </>
                     ) : (
-                      // <div className="no-plan-message">Loading...</div>
-                      <div className="skeleton-right-loading">
-                        <div className="skeleton skeleton-price-box"></div>
-                        <div className="skeleton skeleton-plan-details"></div>
+                      <div className="no-valid-plan">
+                        <h4>Please select a valid combination</h4>
+                        <p>
+                          Change speed, provider, or duration to view available
+                          pricing and plan details.
+                        </p>
                       </div>
                     )}
                   </div>

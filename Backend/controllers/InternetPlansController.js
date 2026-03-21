@@ -4,6 +4,43 @@ const ExcelJS = require("exceljs");
 const fs = require("fs");
 const path = require("path");
 
+const getNormalizedBody = (req) => {
+  let payload = req.body;
+
+  if (Buffer.isBuffer(payload)) {
+    payload = payload.toString("utf8");
+  }
+
+  if (payload && typeof payload === "object" && payload.body !== undefined) {
+    payload = payload.body;
+  }
+
+  if (
+    (payload === undefined || payload === null || payload === "") &&
+    req.apiGateway?.event?.body
+  ) {
+    payload = req.apiGateway.event.body;
+
+    if (req.apiGateway.event.isBase64Encoded && typeof payload === "string") {
+      try {
+        payload = Buffer.from(payload, "base64").toString("utf8");
+      } catch (error) {
+        payload = "";
+      }
+    }
+  }
+
+  if (typeof payload === "string") {
+    try {
+      payload = JSON.parse(payload);
+    } catch (error) {
+      payload = {};
+    }
+  }
+
+  return payload && typeof payload === "object" ? payload : {};
+};
+
 const normalizeExcelValue = (value) => {
   if (value === undefined || value === null) return undefined;
   if (typeof value !== "object") return value;
@@ -246,7 +283,7 @@ exports.getPlanById = async (req, res) => {
 
 exports.addPlan = async (req, res) => {
   try {
-    const normalizedPlan = normalizePlanInput(req.body);
+    const normalizedPlan = normalizePlanInput(getNormalizedBody(req));
 
     if (
       !normalizedPlan.speed ||
@@ -269,7 +306,7 @@ exports.addPlan = async (req, res) => {
 exports.updatePlan = async (req, res) => {
   const { id } = req.params;
   try {
-    const normalizedPlan = normalizePlanInput(req.body);
+    const normalizedPlan = normalizePlanInput(getNormalizedBody(req));
 
     const updatedPlan = await plansService.updatePlan(id, normalizedPlan);
     if (!updatedPlan) {

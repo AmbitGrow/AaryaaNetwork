@@ -28,5 +28,6 @@ router.post("/", auth, createPlan);
 router.put("/:id", auth, updatePlan);
 router.delete("/:id", auth, deletePlan);
 router.post("/import", upload.single("file"), seedPlansFromExcel);
+router.post("/seed", upload.single("file"), seedPlansFromExcel);
 
 module.exports = router;

@@ -4,9 +4,46 @@ const sendOtpEmail = require("../utils/mailer.js");
 const otpStore = require("../utils/otpStore.js");
 const adminService = require("../services/adminService");
 
+const getNormalizedBody = (req) => {
+  let payload = req.body;
+
+  if (Buffer.isBuffer(payload)) {
+    payload = payload.toString("utf8");
+  }
+
+  if (payload && typeof payload === "object" && payload.body !== undefined) {
+    payload = payload.body;
+  }
+
+  if (
+    (payload === undefined || payload === null || payload === "") &&
+    req.apiGateway?.event?.body
+  ) {
+    payload = req.apiGateway.event.body;
+
+    if (req.apiGateway.event.isBase64Encoded && typeof payload === "string") {
+      try {
+        payload = Buffer.from(payload, "base64").toString("utf8");
+      } catch (error) {
+        payload = "";
+      }
+    }
+  }
+
+  if (typeof payload === "string") {
+    try {
+      payload = JSON.parse(payload);
+    } catch (error) {
+      payload = {};
+    }
+  }
+
+  return payload && typeof payload === "object" ? payload : {};
+};
+
 exports.addAdmin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = getNormalizedBody(req);
 
     if (!email || !password)
       return res.status(400).json({ message: "All fields are required" });
@@ -32,9 +69,20 @@ exports.addAdmin = async (req, res) => {
 };
 exports.changePassword = async (req, res) => {
   try {
-    const { email, currentPassword, newPassword } = req.body;
+    const { email, currentPassword, newPassword } = getNormalizedBody(req);
 
-    const admin = await adminService.getByEmail(email);
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    let admin = null;
+
+    if (email) {
+      admin = await adminService.getByEmail(email);
+    } else if (req.user?.id) {
+      admin = await adminService.getById(req.user.id);
+    }
+
     if (!admin) return res.status(404).json({ message: "Admin not found" });
 
     const isMatch = await bcrypt.compare(currentPassword, admin.password);
@@ -52,7 +100,7 @@ exports.changePassword = async (req, res) => {
 };
 
 exports.requestEmailChangeOtp = async (req, res) => {
-  const { currentEmail } = req.body;
+  const { currentEmail } = getNormalizedBody(req);
   try {
     const admin = await adminService.getByEmail(currentEmail);
     if (!admin) return res.status(404).json({ message: "Email not found" });
@@ -69,7 +117,7 @@ exports.requestEmailChangeOtp = async (req, res) => {
 };
 
 exports.verifyOtpAndUpdateEmail = async (req, res) => {
-  const { currentEmail, otp, newEmail } = req.body;
+  const { currentEmail, otp, newEmail } = getNormalizedBody(req);
   try {
     const record = otpStore.get(currentEmail);
     if (!record || record.otp !== otp || Date.now() > record.expires) {
