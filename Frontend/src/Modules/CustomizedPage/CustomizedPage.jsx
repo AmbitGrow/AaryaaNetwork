@@ -59,6 +59,24 @@ const getUniqueValues = (values) => [
   ...new Set(values.filter((value) => value !== undefined && value !== null && value !== "")),
 ];
 
+const PLAN_INTERACTION_COOLDOWN_MS = 80;
+
+const buildPlanKey = ({
+  speed,
+  duration,
+  provider,
+  ottTier,
+  tvChannels,
+  planType,
+}) => [
+  speed || "",
+  duration || "",
+  provider || "",
+  planType || "",
+  ottTier || "",
+  tvChannels || "",
+].join("||");
+
 const SkeletonLoader = () => {
   return (
     <div className="skeleton-wrapper">
@@ -113,6 +131,7 @@ const SkeletonLoader = () => {
 
 const CustomizedPage = () => {
   const plansRef = useRef(null);
+  const lastInteractionRef = useRef(0);
   const [plans, setPlans] = useState([]);
   const durationOptions = DURATION_OPTIONS;
   const [planType, setPlanType] = useState("internet");
@@ -131,8 +150,16 @@ const CustomizedPage = () => {
   const [selectedOttTier, setSelectedOttTier] = useState("");
   const [selectedTvChannel, setSelectedTvChannel] = useState("");
 
-  const [currentPlan, setCurrentPlan] = useState(null);
   const navigate = useNavigate();
+
+  const canProcessInteraction = () => {
+    const now = Date.now();
+    if (now - lastInteractionRef.current < PLAN_INTERACTION_COOLDOWN_MS) {
+      return false;
+    }
+    lastInteractionRef.current = now;
+    return true;
+  };
 
   const speedOptions = useMemo(
     () => getUniqueValues(plans.map((p) => p.speed)).filter(isValidSpeedLabel),
@@ -232,6 +259,37 @@ const CustomizedPage = () => {
       p.duration === selectedDuration
   );
 
+  const planIndex = useMemo(() => {
+    const map = new Map();
+    for (const plan of plans) {
+      const base = {
+        speed: plan.speed,
+        duration: plan.duration,
+        provider: plan.provider,
+        ottTier: plan.ottTier,
+        tvChannels: plan.tvChannels,
+      };
+
+      map.set(
+        buildPlanKey({ ...base, planType: "internet" }),
+        plan
+      );
+      map.set(
+        buildPlanKey({ ...base, planType: "internet+ott" }),
+        plan
+      );
+      map.set(
+        buildPlanKey({ ...base, planType: "internet+tv" }),
+        plan
+      );
+      map.set(
+        buildPlanKey({ ...base, planType: "internet+tv+ott" }),
+        plan
+      );
+    }
+    return map;
+  }, [plans]);
+
   const ottTierOptions = useMemo(() => {
     return planType.includes("ott")
       ? [
@@ -293,64 +351,58 @@ const CustomizedPage = () => {
 
   const handlePlanTypeChange = (nextPlanType) => {
     if (nextPlanType === planType) return;
+    if (!canProcessInteraction()) return;
     setPlanType(nextPlanType);
   };
 
   const handleSpeedChange = (speed) => {
     if (speed === selectedSpeed) return;
+    if (!canProcessInteraction()) return;
     setSelectedSpeed(speed);
   };
 
   const handleProviderChange = (provider) => {
     if (provider === selectedProvider) return;
+    if (!canProcessInteraction()) return;
     setSelectedProvider(provider);
   };
 
   const handleDurationChange = (duration) => {
     if (duration === selectedDuration) return;
+    if (!canProcessInteraction()) return;
     setSelectedDuration(duration);
   };
 
-  // Step 4: set current plan based on ALL selections including ottTier/tvChannels
-  useEffect(() => {
-    // Don't match if required selectors are empty (prevents desync)
+  const currentPlan = useMemo(() => {
     if (!selectedSpeed || !selectedProvider || !selectedDuration) {
-      setCurrentPlan(null);
-      return;
+      return null;
     }
     if (planType.includes("ott") && !selectedOttTier) {
-      setCurrentPlan(null);
-      return;
+      return null;
     }
     if (planType.includes("tv") && !selectedTvChannel) {
-      setCurrentPlan(null);
-      return;
+      return null;
     }
 
-    // Find matching plan
-    let matched = plans.find(
-      (p) =>
-        p.speed === selectedSpeed &&
-        p.duration === selectedDuration &&
-        p.provider === selectedProvider &&
-        (planType === "internet"
-          ? true
-          : planType === "internet+ott"
-          ? p.ottTier === selectedOttTier
-          : planType === "internet+tv"
-          ? p.tvChannels === selectedTvChannel
-          : planType === "internet+tv+ott"
-          ? p.ottTier === selectedOttTier && p.tvChannels === selectedTvChannel
-          : true)
+    return (
+      planIndex.get(
+        buildPlanKey({
+          speed: selectedSpeed,
+          duration: selectedDuration,
+          provider: selectedProvider,
+          ottTier: planType.includes("ott") ? selectedOttTier : "",
+          tvChannels: planType.includes("tv") ? selectedTvChannel : "",
+          planType,
+        })
+      ) || null
     );
-    setCurrentPlan(matched || null);
   }, [
     selectedSpeed,
     selectedDuration,
     selectedProvider,
     selectedOttTier,
     selectedTvChannel,
-    plans,
+    planIndex,
     planType,
   ]);
 
@@ -617,7 +669,7 @@ const CustomizedPage = () => {
             </div>
           </div>
           <div className="right-img">
-            <img src={akka}></img>
+            <img src={akka} loading="lazy" decoding="async"></img>
           </div>
         </div>
         <div className="customized-page" ref={plansRef}>
@@ -706,6 +758,8 @@ const CustomizedPage = () => {
                                   <img
                                     src={providerLogoMap[provider]}
                                     alt={provider}
+                                    loading="lazy"
+                                    decoding="async"
                                     style={{
                                       width: "100%",
                                       height: "100%",
@@ -801,6 +855,8 @@ const CustomizedPage = () => {
                                     alt={ott}
                                     title={ott}
                                     className="ott-logo"
+                                    loading="lazy"
+                                    decoding="async"
                                   />
                                 ))
                               ) : (
