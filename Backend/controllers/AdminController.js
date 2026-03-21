@@ -3,12 +3,49 @@ const jwt = require("jsonwebtoken");
 const adminService = require("../services/adminService");
 const configService = require("../services/configService");
 
+const getNormalizedBody = (req) => {
+  let payload = req.body;
+
+  if (Buffer.isBuffer(payload)) {
+    payload = payload.toString("utf8");
+  }
+
+  if (payload && typeof payload === "object" && payload.body !== undefined) {
+    payload = payload.body;
+  }
+
+  if (
+    (payload === undefined || payload === null || payload === "") &&
+    req.apiGateway?.event?.body
+  ) {
+    payload = req.apiGateway.event.body;
+
+    if (req.apiGateway.event.isBase64Encoded && typeof payload === "string") {
+      try {
+        payload = Buffer.from(payload, "base64").toString("utf8");
+      } catch (error) {
+        payload = "";
+      }
+    }
+  }
+
+  if (typeof payload === "string") {
+    try {
+      payload = JSON.parse(payload);
+    } catch (error) {
+      payload = {};
+    }
+  }
+
+  return payload && typeof payload === "object" ? payload : {};
+};
+
 exports.register = async (req, res) => {
   if (process.env.ALLOW_PUBLIC_ADMIN_REGISTER !== "true") {
     return res.status(403).json({ message: "Public registration is disabled" });
   }
 
-  const { email, password } = req.body;
+  const { email, password } = getNormalizedBody(req);
 
   if (!email || !password) {
     return res.status(400).json({ message: "Email and password are required" });
@@ -33,7 +70,11 @@ exports.register = async (req, res) => {
   }
 };
 exports.loginAdmin = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = getNormalizedBody(req);
+
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
 
   try {
     const admin = await adminService.getByEmail(email);
@@ -55,6 +96,7 @@ exports.loginAdmin = async (req, res) => {
 
     res.json({ message: "Login successful" });
   } catch (err) {
+    console.error("Admin login failed:", err);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -71,7 +113,7 @@ exports.getGst = async (req, res) => {
 };
 
 exports.setGst = async (req, res) => {
-  let { gstPercent } = req.body;
+  let { gstPercent } = getNormalizedBody(req);
   gstPercent = Number(gstPercent);
 
   if (isNaN(gstPercent) || gstPercent < 0 || gstPercent > 100) {

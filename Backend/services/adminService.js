@@ -13,14 +13,15 @@ const getByEmail = async (email) => {
   const data = await docClient.send(
     new ScanCommand({
       TableName: TABLE,
-      FilterExpression: "#email = :email",
-      ExpressionAttributeNames: { "#email": "email" },
-      ExpressionAttributeValues: { ":email": email },
-      Limit: 1,
     })
   );
 
-  return data.Items?.[0] || null;
+  const target = String(email || "").trim().toLowerCase();
+  return (
+    data.Items?.find(
+      (item) => String(item.email || "").trim().toLowerCase() === target
+    ) || null
+  );
 };
 
 const getById = async (id) => {
