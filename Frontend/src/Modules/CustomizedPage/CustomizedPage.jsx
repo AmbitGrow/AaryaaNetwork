@@ -30,17 +30,27 @@ const PLAN_TYPES = [
   { label: "Internet + TV", value: "internet+tv" },
   { label: "Internet + TV + OTT", value: "internet+tv+ott" },
 ];
+const normalizeOttName = (name) =>
+  String(name || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+
 const ottLogoMap = {
-  Netflix: Netflix,
-  Sunnxt: Sunnxt,
-  JioHotstar: Hotstar,
-  "Amazon Prime": PrimeVideo,
-  Zee5: Zee5,
-  SonyLiv: SonyLIv,
-  Aha: Aha,
-  "Apple Tv": AppleTv,
-  "Xstream Play": XstreamPlay,
+  netflix: Netflix,
+  sunnxt: Sunnxt,
+  jiohotstar: Hotstar,
+  hotstar: Hotstar,
+  amazonprime: PrimeVideo,
+  primevideo: PrimeVideo,
+  zee5: Zee5,
+  sonyliv: SonyLIv,
+  aha: Aha,
+  ahatamil: Aha,
+  appletv: AppleTv,
+  xstreamplay: XstreamPlay,
 };
+
+const getOttLogo = (ottName) => ottLogoMap[normalizeOttName(ottName)] || null;
 
 const providerLogoMap = {
   "Aaryaa Network": aaryaanetwork,
@@ -896,17 +906,30 @@ const CustomizedPage = () => {
                             <div className="ott-logo-container">
                               {Array.isArray(currentPlan.ottList) &&
                               currentPlan.ottList.length > 0 ? (
-                                currentPlan.ottList.map((ott, index) => (
-                                  <img
-                                    key={index}
-                                    src={ottLogoMap[ott]}
-                                    alt={ott}
-                                    title={ott}
-                                    className="ott-logo"
-                                    loading="lazy"
-                                    decoding="async"
-                                  />
-                                ))
+                                currentPlan.ottList.map((ott, index) => {
+                                  const logoSrc = getOttLogo(ott);
+                                  return logoSrc ? (
+                                    <img
+                                      key={`${ott}-${index}`}
+                                      src={logoSrc}
+                                      alt={ott}
+                                      title={ott}
+                                      className="ott-logo"
+                                      loading="eager"
+                                      decoding="async"
+                                      width="40"
+                                      height="40"
+                                    />
+                                  ) : (
+                                    <span
+                                      key={`${ott}-${index}`}
+                                      className="ott-logo-fallback"
+                                      title={ott}
+                                    >
+                                      {ott}
+                                    </span>
+                                  );
+                                })
                               ) : (
                                 <span
                                   className="badge badge-none"
