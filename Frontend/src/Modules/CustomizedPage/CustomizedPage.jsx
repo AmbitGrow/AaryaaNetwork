@@ -212,7 +212,10 @@ const CustomizedPage = () => {
       !selectedDuration ||
       !availableDurationOptions.includes(selectedDuration)
     ) {
-      setSelectedDuration(availableDurationOptions[0]);
+      const monthlyFirst = availableDurationOptions.includes("Monthly")
+        ? "Monthly"
+        : availableDurationOptions[0];
+      setSelectedDuration(monthlyFirst);
     }
   }, [
     selectedSpeed,
@@ -291,39 +294,21 @@ const CustomizedPage = () => {
   const handlePlanTypeChange = (nextPlanType) => {
     if (nextPlanType === planType) return;
     setPlanType(nextPlanType);
-    setSelectedSpeed("");
-    setSelectedProvider("");
-    setSelectedDuration("");
-    setSelectedOttTier("");
-    setSelectedTvChannel("");
-    setCurrentPlan(null);
   };
 
   const handleSpeedChange = (speed) => {
     if (speed === selectedSpeed) return;
     setSelectedSpeed(speed);
-    setSelectedProvider("");
-    setSelectedDuration("");
-    setSelectedOttTier("");
-    setSelectedTvChannel("");
-    setCurrentPlan(null);
   };
 
   const handleProviderChange = (provider) => {
     if (provider === selectedProvider) return;
     setSelectedProvider(provider);
-    setSelectedDuration("");
-    setSelectedOttTier("");
-    setSelectedTvChannel("");
-    setCurrentPlan(null);
   };
 
   const handleDurationChange = (duration) => {
     if (duration === selectedDuration) return;
     setSelectedDuration(duration);
-    setSelectedOttTier("");
-    setSelectedTvChannel("");
-    setCurrentPlan(null);
   };
 
   // Step 4: set current plan based on ALL selections including ottTier/tvChannels
@@ -1131,12 +1116,9 @@ const CustomizedPage = () => {
                         </div>
                       </>
                     ) : (
-                      <div className="no-valid-plan">
-                        <h4>Please select a valid combination</h4>
-                        <p>
-                          Change speed, provider, or duration to view available
-                          pricing and plan details.
-                        </p>
+                      <div className="skeleton-right-loading">
+                        <div className="skeleton skeleton-price-box"></div>
+                        <div className="skeleton skeleton-plan-details"></div>
                       </div>
                     )}
                   </div>
