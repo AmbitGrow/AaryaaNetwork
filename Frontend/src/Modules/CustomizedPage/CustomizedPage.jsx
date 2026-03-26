@@ -50,9 +50,9 @@ const ottLogoMap = {
   ahatamil: Aha,
   appletv: AppleTv,
   xstreamplay: XstreamPlay,
-  lionsgate: LionsgatePlay,
-  yupptv: YuppTv,
-  shemaroo: ShemarooMe,
+  // lionsgate: LionsgatePlay,
+  // yupptv: YuppTv,
+  // shemaroo: ShemarooMe,
 
 
 };
