@@ -15,7 +15,9 @@ import SonyLIv from "../../assets/OttListLogo/sony.webp";
 import Aha from "../../assets/OttListLogo/Aha.webp";
 import AppleTv from "../../assets/OttListLogo/AppleTv.webp";
 import XstreamPlay from "../../assets/OttListLogo/XstreamPlay.webp";
-
+import LionsgatePlay from "../../assets/OttListLogo/LionsgatePlay.jpg";
+import YuppTv from "../../assets/OttListLogo/YuppTv.png";
+import ShemarooMe from "../../assets/OttListLogo/ShemarooMe.png";
 import aaryaanetwork from "../../assets/AaryaaLogo.png";
 import skyplay from "../../assets/skyplay.webp";
 import railwire from "../../assets/RailWire.webp";
@@ -48,6 +50,11 @@ const ottLogoMap = {
   ahatamil: Aha,
   appletv: AppleTv,
   xstreamplay: XstreamPlay,
+  // lionsgate: LionsgatePlay,
+  // yupptv: YuppTv,
+  // shemaroo: ShemarooMe,
+
+
 };
 
 const getOttLogo = (ottName) => ottLogoMap[normalizeOttName(ottName)] || null;
@@ -941,36 +948,7 @@ const CustomizedPage = () => {
                             </div>
                           ) : null}
 
-                          {/* ott list */}
-                          {/* {currentPlan ? (
-                          <>
-                            {" "}
-                            <div className="span">
-                              <span
-                                title={
-                                  Array.isArray(currentPlan.ottList)
-                                    ? currentPlan.ottList.join(", ")
-                                    : ""
-                                }
-                                style={{ fontWeight: 500 }}
-                              >
-                                {currentPlan.ottList &&
-                                currentPlan.ottList.length > 0 ? (
-                                  <>{currentPlan.ottList.slice(0).join(", ")}</>
-                                ) : (
-                                  <span
-                                    className="badge badge-none"
-                                    style={{ fontWeight: 500 }}
-                                  >
-                                    —
-                                  </span>
-                                )}
-                              </span>
-                            </div>
-                          </>
-                        ) : (
-                          <></>
-                        )} */}
+  
                         </div>
                       </div>
                     )}
