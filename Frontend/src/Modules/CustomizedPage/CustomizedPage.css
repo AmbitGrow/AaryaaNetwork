@@ -1046,19 +1046,17 @@ button[disabled] {
   }
 
   .skeleton-overallbox .skeleton-box .all-btn {
-    gap: 25px;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-
+    gap: 23px;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   }
   .s-second .skeleton-box .all-btn {
     gap: 25px;
   }
   .skeleton-overallbox .skeleton-box button {
     width: 100%;
-    padding: 11px 4px;
+    padding: 10px 3px;
     font-size: 19px;
-  border-radius: 15px;
-
+    border-radius: 15px;
   }
 }
 @media (max-width: 430px) {
@@ -1135,5 +1133,16 @@ button[disabled] {
     font-size: 16px;
     font-weight: 400;
     padding: 10px 5px;
+  }
+
+  .skeleton-overallbox .skeleton-box .all-btn {
+    gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  }
+  .skeleton-overallbox .skeleton-box button {
+    width: 100%;
+    padding: 10px 3px;
+    font-size: 19px;
+    border-radius: 13px;
   }
 }
