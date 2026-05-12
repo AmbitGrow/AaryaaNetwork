@@ -8,7 +8,6 @@ import { RiWhatsappFill } from "react-icons/ri";
 import { AiFillYoutube } from "react-icons/ai";
 import { FaArrowRightLong } from "react-icons/fa6";
 import { IoIosCall } from "react-icons/io";
-import { IoLogoWhatsapp } from "react-icons/io";
 
 import { Link } from "react-router-dom";
 
@@ -184,17 +183,16 @@ const Footer = () => {
       </div>
       <div className="footer-bottom">
         <p>Aaryaa Fiber Internet Service</p>
-        <div
+        <a
           className="ambitgrow"
-          onClick={() => window.open("https://wa.me/917598238098", "_blank")}
+          href="https://www.linkedin.com/company/ambitgrow"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           <p>
             Made by <span>@AmbitGrow</span>
           </p>
-          <p>
-            (<IoLogoWhatsapp className="call-icon" />)
-          </p>
-        </div>
+        </a>
       </div>
     </div>
   );
